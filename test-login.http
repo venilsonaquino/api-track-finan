@@ -1,0 +1,20 @@
+### Teste de Rota: Login
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "john.doe@example.com",
+  "password": "securePassword123"
+}
+
+### Teste de Rota: Obter Perfil do Usuário
+GET http://localhost:3000/auth/profile
+Authorization: Bearer {access_token}
+
+### Teste de Rota: Refresh Token
+POST http://localhost:3000/auth/refresh
+Content-Type: application/json
+
+{
+  "refresh_token": "{refresh_token}"
+}

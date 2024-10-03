@@ -1,0 +1,38 @@
+### Teste de Rota: Criar Usuário
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "email": "john.doe@example.com",
+  "password": "securePassword123",
+  "fullName": "John Doe"
+}
+
+### Teste de Rota: Obter Todos os Usuários
+GET http://localhost:3000/users
+
+### Teste de Rota: Obter Usuário por ID
+GET http://localhost:3000/users/01J986Z9GKYPVN1JJ0TTJ8DDTS
+
+### Teste de Rota: Atualizar Usuário
+PUT http://localhost:3000/users/01J986Z9GKYPVN1JJ0TTJ8DDTS
+Content-Type: application/json
+
+{
+  "full_name": "John Doe Updated",
+  "password": "newSecurePassword123"
+}
+
+### Teste de Rota: Remover Usuário
+DELETE http://localhost:3000/users/01J986Z9GKYPVN1JJ0TTJ8DDTS
+
+### Teste de Rota: Atualizar Refresh Token
+PATCH http://localhost:3000/users/1/refresh-token
+Content-Type: application/json
+
+{
+  "refreshToken": "newRefreshTokenHere"
+}
+
+### Teste de Rota: Buscar Usuário por Refresh Token
+GET http://localhost:3000/users/refresh-token/newRefreshTokenHere
