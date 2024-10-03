@@ -1,0 +1,24 @@
+### Criar OFX File
+POST http://localhost:3000/ofx-file
+Content-Type: application/json
+
+{
+  "fileName": "extrato-ofx.ofx"
+}
+
+### Obter Todos os Arquivos OFX
+GET http://localhost:3000/ofx-file
+
+### Obter Arquivo OFX por ID
+GET http://localhost:3000/ofx-file/{id}
+
+### Atualizar Arquivo OFX
+PATCH http://localhost:3000/ofx-file/{id}
+Content-Type: application/json
+
+{
+  "fileName": "novo-extrato-ofx.ofx"
+}
+
+### Remover Arquivo OFX
+DELETE http://localhost:3000/ofx-file/{id}
