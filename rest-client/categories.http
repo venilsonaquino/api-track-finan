@@ -1,0 +1,29 @@
+### Teste de Rota: Criar Categoria
+POST http://localhost:3000/categories
+Content-Type: application/json
+
+{
+  "name": "Alimentação",
+  "description": "Despesas com alimentos",
+  "icon": "🍽️",
+  "userId": "user-id-exemplo"
+}
+
+### Teste de Rota: Obter Todas as Categorias
+GET http://localhost:3000/categories
+
+### Teste de Rota: Obter Categoria Específica
+GET http://localhost:3000/categories/{category_id}
+
+### Teste de Rota: Atualizar Categoria
+PATCH http://localhost:3000/categories/{category_id}
+Content-Type: application/json
+
+{
+  "name": "Despesas Alimentares",
+  "description": "Atualização da descrição de despesas com alimentos",
+  "icon": "🍴"
+}
+
+### Teste de Rota: Remover Categoria
+DELETE http://localhost:3000/categories/{category_id}

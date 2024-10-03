@@ -38,13 +38,15 @@ export class TransactionModel extends Model<TransactionModel> {
   balanceAfter: number;
 
   @Column({
-    type: DataType.STRING,
+    field: 'user_id',
+    type: 'VARCHAR(26)',
     allowNull: false,
   })
   userId: string;
 
   @Column({
-    type: DataType.STRING,
+    field: 'category_id',
+    type: 'VARCHAR(26)',
     allowNull: true,
   })
   categoryId: string;
