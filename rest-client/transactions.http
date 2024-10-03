@@ -1,0 +1,30 @@
+### Teste de Rota: Criar Transação
+POST http://localhost:3000/transactions
+Content-Type: application/json
+
+{
+  "date": "2024-10-01 11:00",
+  "description": "Compra de itens",
+  "amount": 150.00,
+  "balanceAfter": 3500.00,
+  "userId": "01J99C14HFC160E2WCJH2JACY1",
+  "categoryId": null
+}
+
+### Teste de Rota: Obter Todas as Transações
+GET http://localhost:3000/transactions
+
+### Teste de Rota: Obter Transação Específica
+GET http://localhost:3000/transactions/{transaction_id}
+
+### Teste de Rota: Atualizar Transação
+PATCH http://localhost:3000/transactions/01J99T2JYC7D5CJJ8ESER1BA3Y
+Content-Type: application/json
+
+{
+  "description": "Compra de itens atualizada",
+  "amount": 200.00
+}
+
+### Teste de Rota: Remover Transação
+DELETE http://localhost:3000/transactions/{transaction_id}

@@ -19,8 +19,14 @@ export class UsersService {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     createUserDto.password = hashedPassword;
+
+    const user = new UserEntity({
+      email: createUserDto.email,
+      fullName: createUserDto.fullName,
+      password: hashedPassword,
+    })
   
-    return this.userModel.create(createUserDto);
+    return this.userModel.create(user);
   }
 
   findAll() {
