@@ -10,19 +10,19 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  signIn(@Body() signInDto: SignInDto) {
-    return this.authService.signIn(signInDto);
+  async signIn(@Body() signInDto: SignInDto) {
+    return await this.authService.signIn(signInDto);
   }
 
   @UseGuards(AuthGuard)
   @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
+  async getProfile(@Request() req) {
+    return await req.user;
   }
 
   @HttpCode(HttpStatus.OK)
   @Post('refresh')
-  refresh(@Body() refreshTokenDto: RefreshTokenDto) {
-    return this.authService.refresh(refreshTokenDto.refresh_token);
+  async refresh(@Body() refreshTokenDto: RefreshTokenDto) {
+    return await this.authService.refresh(refreshTokenDto.refresh_token);
   }
 }

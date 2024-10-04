@@ -45,7 +45,7 @@ export class UserModel extends Model<UserModel> {
 
   @Column({
     field: 'refresh_token',
-    type: DataType.STRING,
+    type: DataType.TEXT,
     allowNull: true,
   })
   refreshToken: string;
