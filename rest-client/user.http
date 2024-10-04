@@ -25,14 +25,3 @@ Content-Type: application/json
 
 ### Teste de Rota: Remover Usuário
 DELETE http://localhost:3000/users/01J986Z9GKYPVN1JJ0TTJ8DDTS
-
-### Teste de Rota: Atualizar Refresh Token
-PATCH http://localhost:3000/users/1/refresh-token
-Content-Type: application/json
-
-{
-  "refreshToken": "newRefreshTokenHere"
-}
-
-### Teste de Rota: Buscar Usuário por Refresh Token
-GET http://localhost:3000/users/refresh-token/newRefreshTokenHere

@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserModel } from './models/user.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { UserEntity } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
+import { ApiNoContentResponse } from '@nestjs/swagger';
 
 @Injectable()
 export class UsersService {
@@ -26,19 +27,25 @@ export class UsersService {
       password: hashedPassword,
     })
   
-    return this.userModel.create(user);
+    return await this.userModel.create(user);
   }
 
-  findAll() {
-    return this.userModel.findAll();
+  async findAll() {
+    return await this.userModel.findAll();
   }
 
-  findOne(id: string) {
-    return this.userModel.findOne({where: {id}});
+  async findOne(id: string) {
+   const user = await this.userModel.findOne({where: {id}});
+
+   if(!user){
+    throw new NotFoundException()
+   }
+
+   return user
   }
 
-  findEmail(email: string) {
-    return this.userModel.findOne({where: {email}});
+  async findEmail(email: string) {
+    return await this.userModel.findOne({where: {email}});
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
@@ -48,24 +55,36 @@ export class UsersService {
     const hashedPassword = await bcrypt.hash(password, 10);
     updateUserDto.password = hashedPassword;
 
-    return this.userModel.update(updateUserDto, {
+    const [affectedCount, updated] = await this.userModel.update(updateUserDto, {
       where: { id } ,
       returning: true
     });
+
+    if (affectedCount == 0 && updated.length == 0){
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+
+    return updated[0];
   }
 
-  remove(id: string) {
-    return this.userModel.destroy({ where: { id } });
+  async remove(id: string): Promise<void> {
+    const deletedCount = await this.userModel.destroy({ where: { id } });
+  
+    if (deletedCount === 0) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+    return;
   }
 
-  updateRefreshToken(id: string, refreshToken: string) {
+  async updateRefreshToken(id: string, refreshToken: string) {
     this.userModel.update(
       { refreshToken },
       { where: { id } }
     );
   }
 
-  findByRefreshToken(refreshToken: string): Promise<UserEntity | null> {
-    return this.userModel.findOne({ where: { refreshToken } });
+  async findByRefreshToken(refreshToken: string): Promise<UserEntity | null> {
+    const user = await this.userModel.findOne({ where: { refreshToken } });
+    return user 
   }
 }
