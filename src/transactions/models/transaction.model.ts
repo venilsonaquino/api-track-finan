@@ -41,10 +41,22 @@ export class TransactionModel extends Model<TransactionModel> {
   })
   balanceAfter: number;
 
+  @Column({
+    type: DataType.BOOLEAN,
+    allowNull: true,
+  })
+  isRecurring: boolean;
+
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: true,
+  })
+  recurringMonths: number;
+
   @ForeignKey(() => UserModel)
   @Column({
     field: 'user_id',
-    type: 'VARCHAR(26)',
+    type: DataType.STRING(26),
     allowNull: false,
   })
   userId: string;
@@ -52,7 +64,7 @@ export class TransactionModel extends Model<TransactionModel> {
   @ForeignKey(() => CategoryModel)
   @Column({
     field: 'category_id',
-    type: 'VARCHAR(26)',
+    type: DataType.STRING(26),
     allowNull: true,
   })
   categoryId: string;
