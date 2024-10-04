@@ -47,7 +47,7 @@ export class TransactionsService {
   }
 
   async update(id: string, updateTransactionDto: UpdateTransactionDto) {
-    const [affectedCount, updated] =await this.transactionalModel.update(updateTransactionDto, {
+    const [affectedCount, updated] = await this.transactionalModel.update(updateTransactionDto, {
       where: { id },
       returning: true
     });

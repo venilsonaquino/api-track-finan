@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { CategoryModel } from './models/category.model';
@@ -29,17 +29,34 @@ export class CategoriesService {
   }
 
   async findOne(id: string) {
-    return await this.categoryModel.findOne({where: {id}});
+    const category = await this.categoryModel.findOne({where: {id}});
+
+    if(!category){
+      throw new NotFoundException(`Category with id ${id} not found`)
+    }
+
+    return category
   }
 
   async update(id: string, updateCategoryDto: UpdateCategoryDto) {
-    return await this.categoryModel.update(updateCategoryDto, {
+    const [affectedCount, updated] = await this.categoryModel.update(updateCategoryDto, {
       where: {id},
       returning: true
     });
+
+    if (affectedCount == 0 && updated.length == 0){
+      throw new NotFoundException(`Category with id ${id} not found`);
+    }
+
+    return updated[0];
   }
 
   async remove(id: string) {
-    return await this.categoryModel.destroy({where: {id}});
+    const deletedCount = await this.categoryModel.destroy({where: {id}});
+
+    if (deletedCount === 0) {
+      throw new NotFoundException(`Category with id ${id} not found`);
+    }
+    return;
   }
 }
