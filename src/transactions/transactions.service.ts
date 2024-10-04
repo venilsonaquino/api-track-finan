@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { InjectModel } from '@nestjs/sequelize';
@@ -19,6 +19,7 @@ export class TransactionsService {
         balanceAfter: createTransactionDto.balanceAfter,
         date: createTransactionDto.date,
         description: createTransactionDto.description,
+        amount: createTransactionDto.amount,
         userId: createTransactionDto.userId,
         categoryId: createTransactionDto.categoryId
       });
@@ -30,22 +31,40 @@ export class TransactionsService {
     }
   }
 
-  findAll() {
-    return this.transactionalModel.findAll();
+  async findAll() {
+    return await this.transactionalModel.findAll();
   }
 
-  findOne(id: string) {
-    return this.transactionalModel.findOne({where: {id}});
+  async findOne(id: string) {
+    const transaction = await this.transactionalModel.findOne({where: {id}});
+
+    if(!transaction){
+      throw new NotFoundException(`Transaction with id ${id} not found`)
+    }
+
+    return transaction;
+
   }
 
-  update(id: string, updateTransactionDto: UpdateTransactionDto) {
-    return this.transactionalModel.update(updateTransactionDto, {
+  async update(id: string, updateTransactionDto: UpdateTransactionDto) {
+    const [affectedCount, updated] =await this.transactionalModel.update(updateTransactionDto, {
       where: { id },
       returning: true
     });
+
+    if (affectedCount == 0 && updated.length == 0){
+      throw new NotFoundException(`Transaction with id ${id} not found`);
+    }
+
+    return updated[0];
   }
 
-  remove(id: string) {
-    return this.transactionalModel.destroy({ where: { id } });
+  async remove(id: string) {
+    const deletedCount = await this.transactionalModel.destroy({ where: { id } });
+
+    if (deletedCount === 0) {
+      throw new NotFoundException(`Transaction with id ${id} not found`);
+    }
+    return;
   }
 }
