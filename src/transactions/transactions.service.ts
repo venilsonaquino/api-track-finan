@@ -12,7 +12,7 @@ export class TransactionsService {
     private readonly transactionalModel: typeof TransactionModel,
   ) {}
 
-  async create(createTransactionDto: CreateTransactionDto) {
+  async create(createTransactionDto: CreateTransactionDto, userId: string) {
     try {
 
       const transaction = new TransactionEntity({
@@ -20,10 +20,10 @@ export class TransactionsService {
         date: createTransactionDto.date,
         description: createTransactionDto.description,
         amount: createTransactionDto.amount,
-        userId: createTransactionDto.userId,
+        userId: userId,
         categoryId: createTransactionDto.categoryId
       });
-      
+
       return await this.transactionalModel.create(transaction);
     } catch (error) {
       console.error('Error creating transaction:', error);
@@ -31,12 +31,18 @@ export class TransactionsService {
     }
   }
 
-  async findAll() {
-    return await this.transactionalModel.findAll();
+  async findAllByUser(userId: string) {
+    return await this.transactionalModel.findAll({
+      where: { userId },
+      order: [['date', 'DESC']],
+    });
   }
 
-  async findOne(id: string) {
-    const transaction = await this.transactionalModel.findOne({where: {id}});
+  async findOne(id: string, userId: string) {
+    const transaction = await this.transactionalModel.findOne({
+      where: {id, userId},
+      include: ['user', 'category'],
+    });
 
     if(!transaction){
       throw new NotFoundException(`Transaction with id ${id} not found`)
@@ -46,9 +52,9 @@ export class TransactionsService {
 
   }
 
-  async update(id: string, updateTransactionDto: UpdateTransactionDto) {
+  async update(id: string, updateTransactionDto: UpdateTransactionDto, userId: string) {
     const [affectedCount, updated] = await this.transactionalModel.update(updateTransactionDto, {
-      where: { id },
+      where: { id, userId },
       returning: true
     });
 
@@ -61,8 +67,10 @@ export class TransactionsService {
 
 
   
-  async remove(id: string) {
-    const deletedCount = await this.transactionalModel.destroy({ where: { id } });
+  async remove(id: string, userId: string) {
+    const deletedCount = await this.transactionalModel.destroy({
+      where: { id, userId } 
+    });
 
     if (deletedCount === 0) {
       throw new NotFoundException(`Transaction with id ${id} not found`);

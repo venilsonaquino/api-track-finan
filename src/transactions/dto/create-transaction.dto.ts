@@ -21,11 +21,6 @@ export class CreateTransactionDto {
   @IsNumber()
   balanceAfter: number;
 
-  @IsNotEmpty()
-  @IsDefined()
-  @IsString()
-  userId: string;
-
   @IsEmpty()
   @IsOptional()
   @IsString()
