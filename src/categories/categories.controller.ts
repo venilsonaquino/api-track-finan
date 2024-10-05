@@ -1,35 +1,44 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, UseGuards, Request } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { AuthGuard } from 'src/common/guards/auth/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('categories')
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
   @Post()
-  async create(@Body() createCategoryDto: CreateCategoryDto) {
+  async create(@Body() createCategoryDto: CreateCategoryDto, @Request() req) {
+    const { user } = req;
+    createCategoryDto.userId = user.id;
     return await this.categoriesService.create(createCategoryDto);
   }
 
   @Get()
-  async findAll() {
-    return await this.categoriesService.findAll();
+  async findAll(@Request() req) {
+    const { user } = req;
+    return await this.categoriesService.findAllByUser(user.id);
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return await this.categoriesService.findOne(id);
+  async findOne(@Param('id') id: string, @Request() req) {
+    const { user } = req;
+    return await this.categoriesService.findOne(id, user.id);
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
+  async update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto, @Request() req) {
+    const { user } = req;
+    updateCategoryDto.userId = user.id;
     return await this.categoriesService.update(id, updateCategoryDto);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    return await this.categoriesService.remove(id);
+  async remove(@Param('id') id: string, @Request() req) {
+    const { user } = req;
+    return await this.categoriesService.remove(id, user.id);
   }
 }

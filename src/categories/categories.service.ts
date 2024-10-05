@@ -24,12 +24,12 @@ export class CategoriesService {
     return await this.categoryModel.create(category);
   }
 
-  async findAll() {
-    return await this.categoryModel.findAll();
+  async findAllByUser(userId: string) {
+    return await this.categoryModel.findAll({where: {userId}});
   }
 
-  async findOne(id: string) {
-    const category = await this.categoryModel.findOne({where: {id}});
+  async findOne(id: string, userId: string) {
+    const category = await this.categoryModel.findOne({where: {id, userId}});
 
     if(!category){
       throw new NotFoundException(`Category with id ${id} not found`)
@@ -40,7 +40,7 @@ export class CategoriesService {
 
   async update(id: string, updateCategoryDto: UpdateCategoryDto) {
     const [affectedCount, updated] = await this.categoryModel.update(updateCategoryDto, {
-      where: {id},
+      where: {id, userId: updateCategoryDto.userId},
       returning: true
     });
 
@@ -51,8 +51,8 @@ export class CategoriesService {
     return updated[0];
   }
 
-  async remove(id: string) {
-    const deletedCount = await this.categoryModel.destroy({where: {id}});
+  async remove(id: string, userId: string) {
+    const deletedCount = await this.categoryModel.destroy({where: {id, userId}});
 
     if (deletedCount === 0) {
       throw new NotFoundException(`Category with id ${id} not found`);
