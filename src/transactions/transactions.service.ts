@@ -59,6 +59,8 @@ export class TransactionsService {
     return updated[0];
   }
 
+
+  
   async remove(id: string) {
     const deletedCount = await this.transactionalModel.destroy({ where: { id } });
 
