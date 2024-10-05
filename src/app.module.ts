@@ -5,7 +5,6 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { TransactionsModule } from './transactions/transactions.module';
 import { CategoriesModule } from './categories/categories.module';
-import { OfxFileModule } from './ofx-file/ofx-file.module';
 
 @Module({
   imports: [
@@ -42,7 +41,6 @@ import { OfxFileModule } from './ofx-file/ofx-file.module';
     UsersModule,
     TransactionsModule,
     CategoriesModule,
-    OfxFileModule
   ],
   controllers: [],
   providers: [],
