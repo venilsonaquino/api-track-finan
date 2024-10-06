@@ -6,7 +6,7 @@ import { STRTTRN } from 'ofx-data-extractor/dist/@types/ofx';
 
 @Injectable()
 export class FilesService {
-  async uploadFile(file: Express.Multer.File) {
+  async uploadFile(file: Express.Multer.File, userId: string) {
 
     const fileEntity = new FileEntity(file);
     const fileType = fileEntity.getFileType();
@@ -15,6 +15,13 @@ export class FilesService {
     const BankerTransfer = processingStrategy.parse(file);
 
     const transactions: TransactionEntity[] = BankerTransfer.map((transfer: STRTTRN) => {
+      new TransactionEntity({
+        tranferType: transfer.TRNTYPE,
+        dipostedDate: transfer.DTPOSTED.date ? transfer.DTPOSTED.date : transfer.DTPOSTED.datetime,
+        description: transfer.MEMO,
+        transactionAmount: +transfer.TRNAMT,
+        userId: userId
+      })
     });
 
     return 'OK'

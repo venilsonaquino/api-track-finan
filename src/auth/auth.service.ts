@@ -63,6 +63,7 @@ export class AuthService {
       user: {
         id: user.id,
         email: user.email,
+        full_name: user.fullName,
         plan: user.plan,
       },
       expires_in: 3600

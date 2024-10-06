@@ -1,5 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 
+export class PayloadResponse {
+  id: string;
+  email: string;
+  full_name: string;
+  plan: string;
+  iat?: number;
+  exp?: number;
+}
+
 export class LoginResponseDto {
   @ApiProperty()
   access_token: string;
@@ -8,7 +17,7 @@ export class LoginResponseDto {
   refresh_token: string;
 
   @ApiProperty()
-  user: any;
+  user: PayloadResponse;
 
   @ApiProperty()
   expires_in: number;

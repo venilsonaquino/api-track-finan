@@ -3,6 +3,8 @@ import { AuthService } from './auth.service';
 import { SignInDto } from './dto/sign-in.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { AuthGuard } from 'src/common/guards/auth/auth.guard';
+import { CurrentUser } from 'src/common/decorators/current-user.decorator';
+import { PayloadResponse } from './dto/login-response.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -16,8 +18,8 @@ export class AuthController {
 
   @UseGuards(AuthGuard)
   @Get('profile')
-  async getProfile(@Request() req) {
-    return await req.user;
+  async getProfile(@CurrentUser() user: PayloadResponse) {
+    return await user;
   }
 
   @HttpCode(HttpStatus.OK)

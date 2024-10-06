@@ -1,9 +1,11 @@
-import { Controller, Post, UseInterceptors, UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator } from '@nestjs/common';
+import { Controller, Post, UseInterceptors, UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, UseGuards } from '@nestjs/common';
 import { FileInterceptor, NoFilesInterceptor } from '@nestjs/platform-express';
-import { FileEntity } from './entities/file.entity';
-import { FilesFactory } from './files.factory';
 import { FilesService } from './files.service';
+import { CurrentUser } from 'src/common/decorators/current-user.decorator';
+import { PayloadResponse } from 'src/auth/dto/login-response.dto';
+import { AuthGuard } from 'src/common/guards/auth/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('files')
 export class FilesController {
   constructor(private readonly filesService: FilesService) {}
@@ -11,6 +13,7 @@ export class FilesController {
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(
+    @CurrentUser() user: PayloadResponse,
     @UploadedFile(
       new ParseFilePipe({
         validators: [
@@ -19,8 +22,8 @@ export class FilesController {
         ]
       })
     ) 
-    file: Express.Multer.File
+    file: Express.Multer.File,
   ) {
-    return await this.filesService.uploadFile(file);
+    return await this.filesService.uploadFile(file, user.id);
   }
 }

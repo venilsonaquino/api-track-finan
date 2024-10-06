@@ -12,7 +12,7 @@ export class PlanGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     const request: Request = context.switchToHttp().getRequest();
-    const user = request.user  as { plan: UserPlan };;
+    const user = request.user as { plan: UserPlan };;
 
     if (!user || !this.allowedPlans.includes(user.plan)) {
       throw new ForbiddenException('Access denied. Insufficient plan.');
