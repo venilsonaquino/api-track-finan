@@ -45,6 +45,13 @@ export class TransactionModel extends Model<TransactionModel> {
   transactionAmount: number;
 
   @Column({
+    field: 'fit_id',
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  fitId: string;
+
+  @Column({
     field: 'balance_after',
     type: DataType.FLOAT,
     allowNull: true,

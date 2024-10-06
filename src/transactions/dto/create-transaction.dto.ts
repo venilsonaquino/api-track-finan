@@ -19,6 +19,11 @@ export class CreateTransactionDto {
   @IsNotEmpty()
   @IsDefined()
   @IsString()
+  fitId: string;
+
+  @IsNotEmpty()
+  @IsDefined()
+  @IsString()
   transactionAmount: number;
 
   @IsNotEmpty()

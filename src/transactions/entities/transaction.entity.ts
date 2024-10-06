@@ -7,6 +7,7 @@ export class TransactionEntity {
   description: string;
   transactionAmount: number;
   userId: string;
+  fitId: string;
   balanceAfter?: number | null;
   categoryId?: string;
   isRecurring?: boolean | null;
@@ -19,7 +20,8 @@ export class TransactionEntity {
     description: string;
     transactionAmount: number;
     userId: string;
-    balanceAfter: number | null;
+    fitId: string;
+    balanceAfter?: number | null;
     categoryId?: string | null;
     isRecurring?: boolean | null;
     recurringMonths?: number | null;
@@ -30,6 +32,7 @@ export class TransactionEntity {
     this.description = params.description;
     this.transactionAmount = params.transactionAmount;
     this.userId = params.userId;
+    this.fitId = params.fitId;
     this.balanceAfter = params.balanceAfter;
     this.categoryId = params.categoryId;
     this.isRecurring = params.isRecurring;

@@ -23,7 +23,8 @@ export class TransactionsService {
         description: createTransactionDto.description,
         transactionAmount: createTransactionDto.transactionAmount,
         userId: userId,
-        categoryId: createTransactionDto.categoryId
+        categoryId: createTransactionDto.categoryId,
+        fitId: createTransactionDto.fitId
       });
 
       return await this.transactionalModel.create(transaction);
