@@ -25,7 +25,6 @@ export class FileEntity {
   }
 
   private validateFile(fileName: string) {
-    console.log('validateFile'+fileName)
     const extension = fileName.split('.').pop()?.toLowerCase();
 
     if (!this.VALID_EXTENSIONS.includes(`.${extension}`)) {
@@ -34,7 +33,6 @@ export class FileEntity {
   }
 
   private getFileExtension(fileName: string): string {
-    console.log('getFileExtension'+fileName)
     return fileName.split('.').pop()?.toLowerCase() || '';
   }
 
