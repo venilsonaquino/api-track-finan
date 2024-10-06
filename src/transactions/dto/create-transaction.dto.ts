@@ -4,7 +4,12 @@ export class CreateTransactionDto {
   @IsNotEmpty()
   @IsDefined()
   @IsDateString()
-  date: string;
+  dipostedDate: string;
+
+  @IsNotEmpty()
+  @IsDefined()
+  @IsString()
+  tranferType: string;
 
   @IsNotEmpty()
   @IsDefined()
@@ -13,12 +18,12 @@ export class CreateTransactionDto {
 
   @IsNotEmpty()
   @IsDefined()
-  @IsNumber()
-  amount: number;
+  @IsString()
+  transactionAmount: number;
 
   @IsNotEmpty()
   @IsDefined()
-  @IsNumber()
+  @IsString()
   @IsOptional()
   balanceAfter: number;
 

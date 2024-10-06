@@ -18,10 +18,11 @@ export class TransactionModel extends Model<TransactionModel> {
   id: string;
 
   @Column({
+    field: 'diposted_date',
     type: DataType.DATE,
     allowNull: false,
   })
-  date: string;
+  dipostedDate: string;
 
   @Column({
     type: DataType.STRING,
@@ -30,24 +31,35 @@ export class TransactionModel extends Model<TransactionModel> {
   description: string;
 
   @Column({
+    field: 'tranfer_type',
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  tranferType: string;
+
+  @Column({
+    field: 'transaction_amount',
     type: DataType.FLOAT,
     allowNull: false,
   })
-  amount: number;
+  transactionAmount: number;
 
   @Column({
+    field: 'balance_after',
     type: DataType.FLOAT,
-    allowNull: false,
+    allowNull: true,
   })
   balanceAfter: number;
 
   @Column({
+    field: 'is_recurring',
     type: DataType.BOOLEAN,
     allowNull: true,
   })
   isRecurring: boolean;
 
   @Column({
+    field: 'recurring_months',
     type: DataType.INTEGER,
     allowNull: true,
   })

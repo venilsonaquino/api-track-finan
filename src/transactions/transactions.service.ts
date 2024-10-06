@@ -17,9 +17,10 @@ export class TransactionsService {
 
       const transaction = new TransactionEntity({
         balanceAfter: createTransactionDto.balanceAfter,
-        date: createTransactionDto.date,
+        tranferType: createTransactionDto.tranferType,
+        dipostedDate: createTransactionDto.dipostedDate,
         description: createTransactionDto.description,
-        amount: createTransactionDto.amount,
+        transactionAmount: createTransactionDto.transactionAmount,
         userId: userId,
         categoryId: createTransactionDto.categoryId
       });
