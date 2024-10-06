@@ -10,7 +10,7 @@ export class FilesService {
     const fileType = fileEntity.getFileType();
 
     const processingStrategy = FilesFactory.getStrategy(fileType);
-    const parsedData = processingStrategy.parse(file);
+    const BankerTransfer = processingStrategy.parse(file);
     return 'OK'
   }
 }

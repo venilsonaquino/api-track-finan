@@ -19,6 +19,7 @@ export class CreateTransactionDto {
   @IsNotEmpty()
   @IsDefined()
   @IsNumber()
+  @IsOptional()
   balanceAfter: number;
 
   @IsEmpty()
