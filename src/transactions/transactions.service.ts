@@ -34,14 +34,15 @@ export class TransactionsService {
     }
   }
 
-  async createMany(BankerTransfer: BankTransferType[], userId: string) {
+  async createMany(BankTransfer: BankTransferType[], userId: string) {
     try {
-      const transactions = BankerTransfer.map((banker) => {
+      const transactions = BankTransfer.map((bank) => {
         return new TransactionEntity({
-          dipostedDate: banker.dipostedDate,
-          transactionAmount: +banker.transactionAmount,
-          tranferType: banker.transferType,
-          description: banker.description,
+          dipostedDate: bank.dipostedDate,
+          transactionAmount: +bank.transactionAmount,
+          tranferType: bank.transferType,
+          description: bank.description,
+          fitId: bank.fitId,
           userId: userId
         });
       });
