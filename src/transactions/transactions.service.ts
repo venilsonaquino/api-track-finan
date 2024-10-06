@@ -47,7 +47,9 @@ export class TransactionsService {
         });
       });
   
-      return await this.transactionalModel.bulkCreate(transactions);
+      return await this.transactionalModel.bulkCreate(transactions, 
+        { updateOnDuplicate: ['dipostedDate', 'transactionAmount', 'tranferType', 'description', 'fitId'] }
+      );
     } catch (error) {
       console.error('Error creating transactions:', error.message);
       throw new InternalServerErrorException('Failed to create transactions');
