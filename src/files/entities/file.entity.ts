@@ -1,32 +1,44 @@
 import { UnsupportedMediaTypeException } from "@nestjs/common";
+import { ulid } from "ulid";
 
 export class FileEntity {
-
-  private _file: Express.Multer.File;
+  id: string;
+  fileName: string;
+  userId: string;
+  uploadDate: string;
+  extension: string;
   private VALID_EXTENSIONS = ['.ofx', '.pdf'];
 
-  constructor(file: Express.Multer.File) {
-    this._file = file;
-    this.validateFile(file);
+  constructor(params: Partial<{
+    id: string;
+    fileName: string;
+    userId: string;
+    uploadDate: string;
+    extension: string;
+  }>) {
+    this.id = params.id || ulid();
+    this.fileName = params.fileName;
+    this.userId = params.userId;
+    this.uploadDate = new Date().toDateString();
+    this.extension = this.getFileExtension(this.fileName);
+    this.validateFile(this.fileName);
   }
 
-  private validateFile(file: Express.Multer.File) {
-    const extension = file.originalname.split('.').pop()?.toLowerCase();
+  private validateFile(fileName: string) {
+    console.log('validateFile'+fileName)
+    const extension = fileName.split('.').pop()?.toLowerCase();
 
     if (!this.VALID_EXTENSIONS.includes(`.${extension}`)) {
       throw new UnsupportedMediaTypeException(`Unsupported file type: .${extension}. Supported types are: ${this.VALID_EXTENSIONS.join(', ')}`);
     }
   }
 
-  private getFileExtension(file: Express.Multer.File): string {
-    return file.originalname.split('.').pop()?.toLowerCase() || '';
+  private getFileExtension(fileName: string): string {
+    console.log('getFileExtension'+fileName)
+    return fileName.split('.').pop()?.toLowerCase() || '';
   }
 
   public getFileType(): string {
-    return this.getFileExtension(this._file);
-  }
-
-  get file() {
-    return this._file;
+    return this.getFileExtension(this.fileName);
   }
 }

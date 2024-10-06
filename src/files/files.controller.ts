@@ -31,7 +31,10 @@ export class FilesController {
   ) {
     
     const bankTransfer = await this.filesService.uploadFile(file);
+
+    await this.filesService.create(file, user.id);
     await this.transactionsService.createMany(bankTransfer, user.id);
+    
     return {
       "status": "success",
       "message": "Batch operation completed successfully.",
