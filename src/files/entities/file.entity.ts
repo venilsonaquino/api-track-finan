@@ -19,7 +19,7 @@ export class FileEntity {
     this.id = params.id || ulid();
     this.fileName = params.fileName;
     this.userId = params.userId;
-    this.uploadDate = new Date().toDateString();
+    this.uploadDate = new Date().toISOString();
     this.extension = this.getFileExtension(this.fileName);
     this.validateFile(this.fileName);
   }

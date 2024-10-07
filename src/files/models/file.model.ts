@@ -1,4 +1,6 @@
-import { BelongsTo, Column, DataType, ForeignKey, Model, PrimaryKey, Table } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, ForeignKey, HasMany, Model, PrimaryKey, Table } from "sequelize-typescript";
+import { TransactionEntity } from "src/transactions/entities/transaction.entity";
+import { TransactionModel } from "src/transactions/models/transaction.model";
 import { UserEntity } from "src/users/entities/user.entity";
 import { UserModel } from "src/users/models/user.model";
 import { ulid } from "ulid";
@@ -46,4 +48,7 @@ import { ulid } from "ulid";
 
   @BelongsTo(() => UserModel)
   user: UserEntity;
+
+  @HasMany(() => TransactionModel)
+  transactions: TransactionEntity[];
 }

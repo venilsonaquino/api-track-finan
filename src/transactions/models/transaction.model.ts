@@ -1,6 +1,8 @@
 import { Table, Column, Model, DataType, PrimaryKey, BeforeCreate, ForeignKey, BelongsTo } from 'sequelize-typescript';
 import { CategoryEntity } from 'src/categories/entities/category.entity';
 import { CategoryModel } from 'src/categories/models/category.model';
+import { FileEntity } from 'src/files/entities/file.entity';
+import { FileModel } from 'src/files/models/file.model';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { UserModel } from 'src/users/models/user.model';
 import { ulid } from 'ulid';
@@ -89,9 +91,20 @@ export class TransactionModel extends Model<TransactionModel> {
   })
   categoryId: string;
 
+  @ForeignKey(() => FileModel)
+  @Column({
+    field: 'file_id',
+    type: DataType.STRING(26),
+    allowNull: true,
+  })
+  fileId: string;
+
   @BelongsTo(() => UserModel)
   user: UserEntity;
 
   @BelongsTo(() => CategoryModel)
   category: CategoryEntity;
+
+  @BelongsTo(() => FileModel)
+  arquivo: FileEntity;
 }

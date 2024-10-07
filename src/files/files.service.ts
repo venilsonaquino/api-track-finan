@@ -11,15 +11,18 @@ export class FilesService {
     private readonly fileModel: typeof FileModel,
   ) {}
 
-  async create(file: Express.Multer.File, userId: string) {
+  async create(file: Express.Multer.File, userId: string): Promise<FileEntity> {
 
     const fileEntity = new FileEntity({
       fileName: file.originalname,
       userId: userId
     });
 
-    await this.fileModel.create(fileEntity);
+    const createdFile = await this.fileModel.create(fileEntity);
+    const createdFileEntity = new FileEntity(createdFile);
+    return createdFileEntity
   }
+
   async uploadFile(file: Express.Multer.File) {
 
     const fileEntity = new FileEntity({

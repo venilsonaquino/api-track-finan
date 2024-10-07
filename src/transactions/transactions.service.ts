@@ -34,7 +34,7 @@ export class TransactionsService {
     }
   }
 
-  async createMany(BankTransfer: BankTransferType[], userId: string) {
+  async createMany(BankTransfer: BankTransferType[], userId: string,  fileId: string) {
     try {
       const transactions = BankTransfer.map((bank) => {
         return new TransactionEntity({
@@ -43,6 +43,7 @@ export class TransactionsService {
           tranferType: bank.transferType,
           description: bank.description,
           fitId: bank.fitId,
+          fileId: fileId,
           userId: userId
         });
       });
