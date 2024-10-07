@@ -11,7 +11,7 @@ export class PayloadResponse {
 
 export class LoginResponseDto {
   @ApiProperty()
-  access_token: string;
+  token: string;
 
   @ApiProperty()
   refresh_token: string;

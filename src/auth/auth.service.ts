@@ -29,13 +29,13 @@ export class AuthService {
       plan: user.plan
     };
 
-    const access_token = await this.jwtService.signAsync(payload, { expiresIn: '1h' });
+    const token = await this.jwtService.signAsync(payload, { expiresIn: '1h' });
     const refresh_token = await this.jwtService.signAsync(payload, { expiresIn: '7d' });
 
     this.usersService.updateRefreshToken(user.id, refresh_token);
 
     return {
-      access_token,
+      token,
       refresh_token,
       user: {
         id: user.id,
@@ -53,12 +53,12 @@ export class AuthService {
     if (!user) throw new UnauthorizedException('Invalid refresh token');
 
     const payload = { id: user.id, email: user.email };
-    const access_token = await this.jwtService.signAsync(payload, { expiresIn: '1h' });
+    const token = await this.jwtService.signAsync(payload, { expiresIn: '1h' });
     const new_refresh_token = await this.jwtService.signAsync(payload, { expiresIn: '7d' });
 
     this.usersService.updateRefreshToken(user.id, new_refresh_token);
     return {
-      access_token,
+      token,
       refresh_token: new_refresh_token,
       user: {
         id: user.id,

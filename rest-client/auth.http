@@ -9,7 +9,7 @@ Content-Type: application/json
 
 ### Teste de Rota: Obter Perfil do Usuário
 GET http://localhost:3000/auth/profile
-Authorization: Bearer {access_token}
+Authorization: Bearer {token}
 
 ### Teste de Rota: Refresh Token
 POST http://localhost:3000/auth/refresh
