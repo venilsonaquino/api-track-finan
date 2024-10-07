@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { TransactionModel } from './models/transaction.model';
 import { TransactionEntity } from './entities/transaction.entity';
 import { BankTransferType } from 'src/common/types/bank-transfer.type';
+import { Transaction } from 'sequelize';
 
 @Injectable()
 export class TransactionsService {
@@ -34,7 +35,7 @@ export class TransactionsService {
     }
   }
 
-  async createMany(BankTransfer: BankTransferType[], userId: string,  fileId: string) {
+  async createMany(BankTransfer: BankTransferType[], userId: string,  fileId: string, transaction: Transaction) {
     try {
       const transactions = BankTransfer.map((bank) => {
         return new TransactionEntity({
@@ -49,11 +50,21 @@ export class TransactionsService {
       });
   
       return await this.transactionalModel.bulkCreate(transactions, 
-        { updateOnDuplicate: ['dipostedDate', 'transactionAmount', 'tranferType', 'description', 'fitId'] }
+        { 
+          updateOnDuplicate: [
+            'dipostedDate', 
+            'transactionAmount', 
+            'tranferType', 
+            'description', 
+            'fitId',
+            'fileId'
+          ],
+          transaction
+        }
       );
     } catch (error) {
       console.error('Error creating transactions:', error.message);
-      throw new InternalServerErrorException('Failed to create transactions');
+      throw new InternalServerErrorException(error.message);
     }
   }
   

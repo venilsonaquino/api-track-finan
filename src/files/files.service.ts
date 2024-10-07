@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { FileEntity } from './entities/file.entity';
 import { FilesFactory } from './files.factory';
 import { FileModel } from './models/file.model';
@@ -16,15 +16,26 @@ export class FilesService {
     private sequelize: Sequelize
   ) {}
 
-  async create(file: Express.Multer.File, userId: string, bankTransfer: BankTransferType[]) {
-    await this.sequelize.transaction();
+  async create(file: Express.Multer.File, userId: string, bankTransfer: BankTransferType[]): Promise<FileEntity> {
+    
     const fileEntity = new FileEntity({
       fileName: file.originalname,
       userId: userId
     });
 
-    const createdFile = await this.fileModel.create(fileEntity);
-    await this.transactionsService.createMany(bankTransfer, userId, createdFile.id);
+    const transaction = await this.sequelize.transaction();
+
+    try {
+      const createdFile = await this.fileModel.create(fileEntity, { transaction });
+      await this.transactionsService.createMany(bankTransfer, userId, createdFile.id, transaction);
+      await transaction.commit();
+      const createdFileEntity = new FileEntity(createdFile);
+      return createdFileEntity;
+      
+    } catch (error) {
+      await transaction.rollback();
+      throw new InternalServerErrorException(error.message);
+    }
   }
 
   async uploadFile(file: Express.Multer.File) {
