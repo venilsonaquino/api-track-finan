@@ -31,12 +31,7 @@ export class FilesController {
   ) {
     
     const bankTransfer = await this.filesService.uploadFile(file);
-
-
-    //ADD TRANSACTION AND ID OF FILE IN ROW OF TRANSACTION
-
-    const createdFile = await this.filesService.create(file, user.id);
-    await this.transactionsService.createMany(bankTransfer, user.id, createdFile.id);
+    const createdFile = await this.filesService.create(file, user.id, bankTransfer);
     
     return {
       "status": "success",
