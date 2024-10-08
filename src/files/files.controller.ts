@@ -1,24 +1,28 @@
-import { Controller, Post, UseInterceptors, UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, UseGuards } from '@nestjs/common';
-import { FileInterceptor, NoFilesInterceptor } from '@nestjs/platform-express';
+import { 
+  Controller, 
+  Post, 
+  UseInterceptors, 
+  UploadedFile, 
+  ParseFilePipe, 
+  MaxFileSizeValidator, 
+  FileTypeValidator, 
+  UseGuards 
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { FilesService } from './files.service';
-import { CurrentUser } from 'src/common/decorators/current-user.decorator';
-import { PayloadResponse } from 'src/auth/dto/login-response.dto';
 import { AuthGuard } from 'src/common/guards/auth/auth.guard';
-import { UserEntity } from 'src/users/entities/user.entity';
-import { TransactionsService } from 'src/transactions/transactions.service';
+import { BankTransferType } from 'src/common/types/bank-transfer.type';
 
 @UseGuards(AuthGuard)
 @Controller('files')
 export class FilesController {
   constructor(
-    private readonly filesService: FilesService,
-    private readonly transactionsService: TransactionsService
+    private readonly filesService: FilesService
   ) {}
 
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(
-    @CurrentUser() user: UserEntity,
     @UploadedFile(
       new ParseFilePipe({
         validators: [
@@ -28,15 +32,8 @@ export class FilesController {
       })
     ) 
     file: Express.Multer.File,
-  ) {
-    
+  ): Promise<BankTransferType[]> {
     const bankTransfer = await this.filesService.uploadFile(file);
-    const createdFile = await this.filesService.create(file, user.id, bankTransfer);
-    
-    return {
-      "status": "success",
-      "message": "Batch operation completed successfully.",
-      "data": bankTransfer
-    }
+    return bankTransfer
   }
 }
