@@ -6,6 +6,7 @@ import { UsersModule } from './users/users.module';
 import { TransactionsModule } from './transactions/transactions.module';
 import { CategoriesModule } from './categories/categories.module';
 import { FilesModule } from './files/files.module';
+import { WalletsModule } from './wallets/wallets.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { FilesModule } from './files/files.module';
     TransactionsModule,
     CategoriesModule,
     FilesModule,
+    WalletsModule,
   ],
   controllers: [],
   providers: [],
