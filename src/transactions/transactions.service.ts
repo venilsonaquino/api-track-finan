@@ -44,7 +44,6 @@ export class TransactionsService {
           tranferType: bank.transferType,
           description: bank.description,
           fitId: bank.fitId,
-          fileId: fileId,
           userId: userId
         });
       });
@@ -57,7 +56,6 @@ export class TransactionsService {
             'tranferType', 
             'description', 
             'fitId',
-            'fileId'
           ],
           transaction
         }
@@ -87,7 +85,6 @@ export class TransactionsService {
     }
 
     return transaction;
-
   }
 
   async update(id: string, updateTransactionDto: UpdateTransactionDto, userId: string) {

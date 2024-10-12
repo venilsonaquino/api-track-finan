@@ -1,14 +1,12 @@
-import { BelongsTo, Column, DataType, ForeignKey, HasMany, Model, PrimaryKey, Table } from "sequelize-typescript";
-import { TransactionEntity } from "src/transactions/entities/transaction.entity";
-import { TransactionModel } from "src/transactions/models/transaction.model";
+import { BelongsTo, Column, DataType, ForeignKey, Model, PrimaryKey, Table } from "sequelize-typescript";
 import { UserEntity } from "src/users/entities/user.entity";
 import { UserModel } from "src/users/models/user.model";
 import { ulid } from "ulid";
 
 @Table({
-    tableName: 'files'
-  })
-  export class FileModel extends Model<FileModel> {
+  tableName: 'files'
+})
+export class FileModel extends Model<FileModel> {
   @PrimaryKey
   @Column({
   type: DataType.STRING(26),
@@ -48,7 +46,4 @@ import { ulid } from "ulid";
 
   @BelongsTo(() => UserModel)
   user: UserEntity;
-
-  @HasMany(() => TransactionModel)
-  transactions: TransactionEntity[];
 }

@@ -1,15 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { WalletsService } from './wallets.service';
-import { CreateWalletDto } from './dto/create-wallet.dto';
 import { UpdateWalletDto } from './dto/update-wallet.dto';
+import { CurrentUser } from 'src/common/decorators/current-user.decorator';
+import { CreateWalletDto } from './dto/create-wallet.dto';
+import { AuthGuard } from 'src/common/guards/auth/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('wallets')
 export class WalletsController {
   constructor(private readonly walletsService: WalletsService) {}
 
   @Post()
-  create(@Body() createWalletDto: CreateWalletDto) {
-    return this.walletsService.create(createWalletDto);
+  create(@Body() createWalletDto: CreateWalletDto, @CurrentUser() user) {
+    return this.walletsService.create(createWalletDto, user.id);
   }
 
   @Get()
@@ -19,16 +22,16 @@ export class WalletsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.walletsService.findOne(+id);
+    return this.walletsService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateWalletDto: UpdateWalletDto) {
-    return this.walletsService.update(+id, updateWalletDto);
+  update(@Param('id') id: string, @Body() updateWalletDto: UpdateWalletDto, @CurrentUser() user) {
+    return this.walletsService.update(id, updateWalletDto, user.id);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.walletsService.remove(+id);
+  remove(@Param('id') id: string, @CurrentUser() user) {
+    return this.walletsService.remove(id, user.id);
   }
 }

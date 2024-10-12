@@ -1,0 +1,38 @@
+### Criar uma nova carteira
+POST http://localhost:3000/wallets
+Content-Type: application/json
+
+{
+  "name": "Personal Wallet",
+  "description": "My personal savings wallet",
+  "walletType": "Personal",
+  "icon": "wallet-icon.png",
+  "color": "#FF5733",
+  "balance": 500.0
+}
+
+###
+
+### Obter todas as carteiras
+GET http://localhost:3000/wallets
+
+###
+
+### Obter uma carteira específica (substitua o ID pelo valor correto)
+GET http://localhost:3000/wallets/01J9Z1BFKQSM1EKF0CF6QWQ2BZ
+
+###
+
+### Atualizar uma carteira específica (substitua o ID pelo valor correto)
+PATCH http://localhost:3000/wallets/01J9Z1BFKQSM1EKF0CF6QWQ2BZ
+Content-Type: application/json
+
+{
+  "name": "Updated Wallet Name",
+  "balance": 1000.0
+}
+
+###
+
+### Remover uma carteira (substitua o ID pelo valor correto)
+DELETE http://localhost:3000/wallets/01J9Z1BFKQSM1EKF0CF6QWQ2BZ

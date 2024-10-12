@@ -12,7 +12,6 @@ export class TransactionEntity {
   categoryId?: string;
   isRecurring?: boolean | null;
   recurringMonths?: number | null;
-  fileId? : string | null;
 
   constructor(params: Partial<{
     id: string;
@@ -26,7 +25,6 @@ export class TransactionEntity {
     categoryId?: string | null;
     isRecurring?: boolean | null;
     recurringMonths?: number | null;
-    fileId? : string | null;
   }>) {
     this.id = params.id || ulid();
     this.tranferType =  params.tranferType
@@ -39,6 +37,5 @@ export class TransactionEntity {
     this.categoryId = params.categoryId;
     this.isRecurring = params.isRecurring;
     this.recurringMonths = params.recurringMonths;
-    this.fileId = params.fileId
   }
 }
