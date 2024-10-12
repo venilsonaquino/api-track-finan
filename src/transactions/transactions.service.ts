@@ -63,10 +63,33 @@ export class TransactionsService {
   
 
   async findAllByUser(userId: string) {
-    return await this.transactionalModel.findAll({
+    const transactions = await this.transactionalModel.findAll({
       where: { userId },
-      order: [['date', 'DESC']],
+      order: [['dipostedDate', 'DESC']],
+      include: ['category', 'wallet'],
     });
+
+    const groupByDipostedDate = transactions.reduce((group, transaction) => {
+      const isoDate = new Date(transaction.dipostedDate).toISOString().split('T')[0]; // Formato 'YYYY-MM-DD'
+    
+      // Verifica se a data já está no grupo
+      if (!group[isoDate]) {
+        group[isoDate] = {
+          date: isoDate,
+          end_of_day_balance: null, // Definindo como null ou 0 conforme sua necessidade
+          transactions: [] // Inicializa o array de transações
+        };
+      }
+    
+      // Adiciona a transação ao array de transações correspondente
+      group[isoDate].transactions.push(transaction);
+      return group;
+    }, {});
+    
+    // Converte o objeto agrupado em um array de objetos
+    const groupedTransactionsArray = Object.values(groupByDipostedDate);
+
+    return groupedTransactionsArray;
   }
 
   async findOne(id: string, userId: string) {
