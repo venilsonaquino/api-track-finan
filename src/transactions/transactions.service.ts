@@ -76,12 +76,11 @@ export class TransactionsService {
       if (!group[isoDate]) {
         group[isoDate] = {
           date: isoDate,
-          end_of_day_balance: null, // Definindo como null ou 0 conforme sua necessidade
-          transactions: [] // Inicializa o array de transações
+          endOfDayBalance: null,
+          transactions: []
         };
       }
     
-      // Adiciona a transação ao array de transações correspondente
       group[isoDate].transactions.push(transaction);
       return group;
     }, {});
