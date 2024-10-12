@@ -2,7 +2,7 @@ import { Ofx } from "ofx-data-extractor";
 import { FileProcessingStrategy } from "../interfaces/file-processing.strategy";
 import { InternalServerErrorException, UnprocessableEntityException } from "@nestjs/common";
 import { STRTTRN } from "ofx-data-extractor/dist/@types/ofx";
-import { BankTransferType } from "src/common/types/bank-transfer.type";
+import { FileDto } from "../dto/file.dto";
 
 export class OfxStrategy implements FileProcessingStrategy {
   parse(file: Express.Multer.File): any {
@@ -27,17 +27,17 @@ export class OfxStrategy implements FileProcessingStrategy {
     try {
       const bankTransferList = ofx.getBankTransferList();
 
-      const bankTransfer: BankTransferType[] = bankTransferList.map((transfer: STRTTRN) => {
+      const fileDto: FileDto[] = bankTransferList.map((transfer: STRTTRN) => {
         return {
-          transferType: transfer.TRNTYPE,
-          dipostedDate: typeof transfer.DTPOSTED == 'string' ? transfer.DTPOSTED : transfer.DTPOSTED.date,
+          transfer_type: transfer.TRNTYPE,
+          diposted_date: typeof transfer.DTPOSTED == 'string' ? transfer.DTPOSTED : transfer.DTPOSTED.date,
           description: transfer.MEMO,
-          transactionAmount: transfer.TRNAMT,
-          fitId: typeof transfer.FITID === 'string' ? transfer.FITID : transfer.FITID.transactionCode,
+          transaction_amount: transfer.TRNAMT,
+          fit_id: typeof transfer.FITID === 'string' ? transfer.FITID : transfer.FITID.transactionCode,
         };
       });
 
-      return bankTransfer
+      return fileDto
     } catch (error) {
       throw new InternalServerErrorException(`Error when trying to parse data from the OFX file`)
     }

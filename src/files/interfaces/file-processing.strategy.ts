@@ -1,5 +1,5 @@
-import { BankTransferType } from "src/common/types/bank-transfer.type";
+import { FileDto } from "../dto/file.dto";
 
 export interface FileProcessingStrategy {
-    parse(file: Express.Multer.File): BankTransferType[];
+    parse(file: Express.Multer.File): FileDto[];
 }
