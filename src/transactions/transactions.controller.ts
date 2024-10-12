@@ -15,6 +15,12 @@ export class TransactionsController {
     return await this.transactionsService.create(createTransactionDto, user.id);
   }
 
+  @Post('create-batch')
+  async createMany(@Body() createTransactionDto: CreateTransactionDto[], @Request() req) {
+    const { user } = req;
+    return await this.transactionsService.createMany(createTransactionDto, user.id);
+  }
+
   @Get()
   async findAll(@Request() req) {
     const { user } = req;

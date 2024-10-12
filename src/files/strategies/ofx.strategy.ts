@@ -32,7 +32,7 @@ export class OfxStrategy implements FileProcessingStrategy {
           transfer_type: transfer.TRNTYPE,
           diposted_date: typeof transfer.DTPOSTED == 'string' ? transfer.DTPOSTED : transfer.DTPOSTED.date,
           description: transfer.MEMO,
-          transaction_amount: transfer.TRNAMT,
+          amount: transfer.TRNAMT,
           fit_id: typeof transfer.FITID === 'string' ? transfer.FITID : transfer.FITID.transactionCode,
         };
       });

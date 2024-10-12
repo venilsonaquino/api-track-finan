@@ -1,4 +1,4 @@
-import { IsDefined, IsNotEmpty, IsEmpty, IsString, IsNumber, IsDateString, IsOptional } from 'class-validator';
+import { IsDefined, IsNotEmpty, IsString, IsDateString, IsEmpty, IsBoolean, IsNumber, IsOptional } from 'class-validator';
 
 export class CreateTransactionDto {
   @IsNotEmpty()
@@ -9,31 +9,40 @@ export class CreateTransactionDto {
   @IsNotEmpty()
   @IsDefined()
   @IsString()
-  tranferType: string;
+  transferType: string;
 
   @IsNotEmpty()
   @IsDefined()
   @IsString()
   description: string;
+  
+  @IsNotEmpty()
+  @IsDefined()
+  @IsString()
+  amount: number;
+
+  @IsEmpty()
+  @IsOptional()
+  @IsBoolean()
+  isRecurring: boolean;
+
+  @IsEmpty()
+  @IsOptional()
+  @IsNumber()
+  recurringMonths: number;
+
+  @IsNotEmpty()
+  @IsDefined()
+  @IsString()
+  categoryId: string;
+
+  @IsNotEmpty()
+  @IsDefined()
+  @IsString()
+  walletId: string;
 
   @IsNotEmpty()
   @IsDefined()
   @IsString()
   fitId: string;
-
-  @IsNotEmpty()
-  @IsDefined()
-  @IsString()
-  transactionAmount: number;
-
-  @IsNotEmpty()
-  @IsDefined()
-  @IsString()
-  @IsOptional()
-  balanceAfter: number;
-
-  @IsEmpty()
-  @IsOptional()
-  @IsString()
-  categoryId: string;
 }

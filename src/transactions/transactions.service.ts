@@ -1,11 +1,9 @@
-import { Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { TransactionModel } from './models/transaction.model';
 import { TransactionEntity } from './entities/transaction.entity';
-import { BankTransferType } from 'src/common/types/bank-transfer.type';
-import { Transaction } from 'sequelize';
 
 @Injectable()
 export class TransactionsService {
@@ -18,14 +16,16 @@ export class TransactionsService {
     try {
 
       const transaction = new TransactionEntity({
-        balanceAfter: createTransactionDto.balanceAfter,
-        tranferType: createTransactionDto.tranferType,
+        transferType: createTransactionDto.transferType,
         dipostedDate: createTransactionDto.dipostedDate,
         description: createTransactionDto.description,
-        transactionAmount: createTransactionDto.transactionAmount,
+        amount: createTransactionDto.amount,
+        isRecurring: createTransactionDto.isRecurring,
+        recurringMonths: createTransactionDto.recurringMonths,
         userId: userId,
         categoryId: createTransactionDto.categoryId,
-        fitId: createTransactionDto.fitId
+        fitId: createTransactionDto.fitId,
+        walletId: createTransactionDto.walletId
       });
 
       return await this.transactionalModel.create(transaction);
@@ -35,31 +35,26 @@ export class TransactionsService {
     }
   }
 
-  async createMany(BankTransfer: BankTransferType[], userId: string,  fileId: string, transaction: Transaction) {
+  async createMany(
+    createTransactionDtos: CreateTransactionDto[], 
+    userId: string 
+  ) {
     try {
-      const transactions = BankTransfer.map((bank) => {
-        return new TransactionEntity({
-          dipostedDate: bank.dipostedDate,
-          transactionAmount: +bank.transactionAmount,
-          tranferType: bank.transferType,
-          description: bank.description,
-          fitId: bank.fitId,
-          userId: userId
-        });
-      });
+      const transactions = createTransactionDtos.map(dto => new TransactionEntity({
+        transferType: dto.transferType,
+        dipostedDate: dto.dipostedDate,
+        description: dto.description,
+        amount: dto.amount,
+        isRecurring: dto.isRecurring,
+        recurringMonths: dto.recurringMonths,
+        userId: userId,
+        categoryId: dto.categoryId,
+        fitId: dto.fitId,
+        walletId: dto.walletId
+      }));
   
-      return await this.transactionalModel.bulkCreate(transactions, 
-        { 
-          updateOnDuplicate: [
-            'dipostedDate', 
-            'transactionAmount', 
-            'tranferType', 
-            'description', 
-            'fitId',
-          ],
-          transaction
-        }
-      );
+  
+      return await this.transactionalModel.bulkCreate(transactions);
     } catch (error) {
       console.error('Error creating transactions:', error.message);
       throw new InternalServerErrorException(error.message);

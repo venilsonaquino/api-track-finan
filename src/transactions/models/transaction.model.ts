@@ -37,14 +37,13 @@ export class TransactionModel extends Model<TransactionModel> {
     type: DataType.STRING,
     allowNull: false,
   })
-  tranferType: string;
+  transferType: string;
 
   @Column({
-    field: 'transaction_amount',
     type: DataType.FLOAT,
     allowNull: false,
   })
-  transactionAmount: number;
+  amount: number;
 
   @Column({
     field: 'fit_id',
@@ -53,13 +52,6 @@ export class TransactionModel extends Model<TransactionModel> {
     unique: true,
   })
   fitId: string;
-
-  @Column({
-    field: 'balance_after',
-    type: DataType.FLOAT,
-    allowNull: true,
-  })
-  balanceAfter: number;
 
   @Column({
     field: 'is_recurring',
@@ -87,7 +79,7 @@ export class TransactionModel extends Model<TransactionModel> {
   @Column({
     field: 'category_id',
     type: DataType.STRING(26),
-    allowNull: true,
+    allowNull: false,
   })
   categoryId: string;
 
