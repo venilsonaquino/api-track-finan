@@ -6,11 +6,14 @@ import {
   ParseFilePipe, 
   MaxFileSizeValidator, 
   FileTypeValidator, 
-  UseGuards 
+  UseGuards, 
+  HttpCode,
+  HttpStatus
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FilesService } from './files.service';
 import { AuthGuard } from 'src/common/guards/auth/auth.guard';
+import { CreateTransactionDto } from 'src/transactions/dto/create-transaction.dto';
 import { FileDto } from './dto/file.dto';
 
 @UseGuards(AuthGuard)
@@ -21,6 +24,7 @@ export class FilesController {
   ) {}
 
   @Post()
+  @HttpCode(HttpStatus.OK)
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(
     @UploadedFile(
@@ -33,7 +37,7 @@ export class FilesController {
     ) 
     file: Express.Multer.File,
   ): Promise<FileDto[]> {
-    const bankTransfer = await this.filesService.uploadFile(file);
-    return bankTransfer
+    const transaction = await this.filesService.uploadFile(file);
+    return transaction
   }
 }

@@ -19,7 +19,7 @@ export class TransactionsService {
         transferType: createTransactionDto.transferType,
         dipostedDate: createTransactionDto.dipostedDate,
         description: createTransactionDto.description,
-        amount: createTransactionDto.amount,
+        amount: +createTransactionDto.amount,
         isRecurring: createTransactionDto.isRecurring,
         recurringMonths: createTransactionDto.recurringMonths,
         userId: userId,
@@ -44,7 +44,7 @@ export class TransactionsService {
         transferType: dto.transferType,
         dipostedDate: dto.dipostedDate,
         description: dto.description,
-        amount: dto.amount,
+        amount: +dto.amount,
         isRecurring: dto.isRecurring,
         recurringMonths: dto.recurringMonths,
         userId: userId,
@@ -83,7 +83,22 @@ export class TransactionsService {
   }
 
   async update(id: string, updateTransactionDto: UpdateTransactionDto, userId: string) {
-    const [affectedCount, updated] = await this.transactionalModel.update(updateTransactionDto, {
+
+    const transaction = new TransactionEntity({
+      transferType: updateTransactionDto.transferType,
+      dipostedDate: updateTransactionDto.dipostedDate,
+      description: updateTransactionDto.description,
+      amount: +updateTransactionDto.amount,
+      isRecurring: updateTransactionDto.isRecurring,
+      recurringMonths: updateTransactionDto.recurringMonths,
+      userId: userId,
+      categoryId: updateTransactionDto.categoryId,
+      fitId: updateTransactionDto.fitId,
+      walletId: updateTransactionDto.walletId
+    });
+
+
+    const [affectedCount, updated] = await this.transactionalModel.update(transaction, {
       where: { id, userId },
       returning: true
     });

@@ -19,7 +19,7 @@ export class CreateTransactionDto {
   @IsNotEmpty()
   @IsDefined()
   @IsString()
-  amount: number;
+  amount: string;
 
   @IsEmpty()
   @IsOptional()
