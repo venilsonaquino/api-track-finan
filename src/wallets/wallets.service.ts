@@ -31,13 +31,13 @@ export class WalletsService {
     }
   }
 
-  async findAll(): Promise<WalletEntity[]> {
-    const wallets = await this.walletModel.findAll();
+  async findAll(userId: string): Promise<WalletEntity[]> {
+    const wallets = await this.walletModel.findAll({where: {userId}});
     return wallets
   }
 
-  async findOne(id: string): Promise<WalletEntity> {
-    const wallet = await this.walletModel.findByPk(id);
+  async findOne(id: string, userId: string): Promise<WalletEntity> {
+    const wallet = await this.walletModel.findOne({where: {id, userId}});
     if (!wallet) {
       throw new NotFoundException(`Wallet with ID ${id} not found`);
     }

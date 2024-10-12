@@ -16,13 +16,13 @@ export class WalletsController {
   }
 
   @Get()
-  findAll() {
-    return this.walletsService.findAll();
+  findAll(@CurrentUser() user) {
+    return this.walletsService.findAll(user.id);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.walletsService.findOne(id);
+  findOne(@Param('id') id: string,  @CurrentUser() user) {
+    return this.walletsService.findOne(id, user.id);
   }
 
   @Patch(':id')
