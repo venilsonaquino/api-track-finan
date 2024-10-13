@@ -32,6 +32,13 @@ export class CategoryModel extends Model<CategoryModel>{
   icon: string;
 
   @Column({
+    type: DataType.STRING,
+    allowNull: true,
+    defaultValue: '#007BFF',
+  })
+  color: string;
+
+  @Column({
     field: 'user_id',
     type: 'VARCHAR(26)',
     allowNull: false,

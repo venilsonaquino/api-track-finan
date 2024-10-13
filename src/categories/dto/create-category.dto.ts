@@ -16,5 +16,9 @@ export class CreateCategoryDto {
 
     @IsOptional()
     @IsString()
+    color: string;
+
+    @IsOptional()
+    @IsString()
     userId: string;
 }

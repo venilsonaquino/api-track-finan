@@ -5,6 +5,7 @@ export class CategoryEntity {
     name: string;
     description?: string;
     icon?: string;
+    color?: string;
     userId?: string;
 
     constructor(params: Partial<{
@@ -12,12 +13,14 @@ export class CategoryEntity {
         name: string;
         description: string;
         icon?: string;
+        color?: string;
         userId?: string;
     }>){
         this.id = params.id || ulid();
         this.name = params.name;
         this.description = params.description;
         this.icon = params.icon;
+        this.color = params.color;
         this.userId = params.userId;
     }
 }
