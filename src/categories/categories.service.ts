@@ -25,11 +25,16 @@ export class CategoriesService {
   }
 
   async findAllByUser(userId: string) {
-    return await this.categoryModel.findAll({where: {userId}});
+    return await this.categoryModel.findAll({
+      where: {userId},
+      order: [['created_at', 'DESC']],
+    });
   }
 
   async findOne(id: string, userId: string) {
-    const category = await this.categoryModel.findOne({where: {id, userId}});
+    const category = await this.categoryModel.findOne({
+      where: {id, userId}
+    });
 
     if(!category){
       throw new NotFoundException(`Category with id ${id} not found`)
