@@ -15,6 +15,8 @@ import { FilesService } from './files.service';
 import { AuthGuard } from 'src/common/guards/auth/auth.guard';
 import { CreateTransactionDto } from 'src/transactions/dto/create-transaction.dto';
 import { FileDto } from './dto/file.dto';
+import { CurrentUser } from 'src/common/decorators/current-user.decorator';
+import { PayloadResponse } from 'src/auth/dto/login-response.dto';
 
 @UseGuards(AuthGuard)
 @Controller('files')
@@ -35,9 +37,11 @@ export class FilesController {
         ]
       })
     ) 
-    file: Express.Multer.File,
+    file: Express.Multer.File, 
+    @CurrentUser() user: PayloadResponse
   ): Promise<FileDto[]> {
-    const transaction = await this.filesService.uploadFile(file);
+    const userId = user.id
+    const transaction = await this.filesService.uploadFile(file, userId);
     return transaction
   }
 }

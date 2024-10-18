@@ -2,7 +2,6 @@ import { Ofx } from "ofx-data-extractor";
 import { FileProcessingStrategy } from "../interfaces/file-processing.strategy";
 import { InternalServerErrorException, UnprocessableEntityException } from "@nestjs/common";
 import { STRTTRN } from "ofx-data-extractor/dist/@types/ofx";
-import { CreateTransactionDto } from "src/transactions/dto/create-transaction.dto";
 import { FileDto } from "../dto/file.dto";
 
 export class OfxStrategy implements FileProcessingStrategy {
@@ -29,9 +28,10 @@ export class OfxStrategy implements FileProcessingStrategy {
       const bankTransferList = ofx.getBankTransferList();
 
       const transactionList: FileDto[] = bankTransferList.map((transfer: STRTTRN) => {
+
         return {
           transferType: transfer.TRNTYPE,
-          dipostedDate: typeof transfer.DTPOSTED == 'string' ? transfer.DTPOSTED : transfer.DTPOSTED.date,
+          depositedDate: typeof transfer.DTPOSTED == 'string' ? transfer.DTPOSTED : transfer.DTPOSTED.date,
           description: transfer.MEMO,
           amount: transfer.TRNAMT,
           fitId: typeof transfer.FITID === 'string' ? transfer.FITID : transfer.FITID.transactionCode,

@@ -4,6 +4,7 @@ import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { TransactionModel } from './models/transaction.model';
 import { TransactionEntity } from './entities/transaction.entity';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class TransactionsService {
@@ -85,7 +86,6 @@ export class TransactionsService {
       return group;
     }, {});
     
-    // Converte o objeto agrupado em um array de objetos
     const groupedTransactionsArray = Object.values(groupByDipostedDate);
 
     return groupedTransactionsArray;
@@ -144,4 +144,22 @@ export class TransactionsService {
     }
     return;
   }
+
+  async previousTransactions(uniqueDescriptions: string[], userId: string) {
+
+    const previousTransactions = await this.transactionalModel.findAll({
+      where: {
+        description: {
+          [Op.in]: uniqueDescriptions
+        },
+        userId: userId
+      },
+      attributes: ['description', 'created_at'],
+      include: ['category'],
+      order: [['created_at', 'DESC']],
+    });
+
+    return previousTransactions;
+  }
+  
 }
