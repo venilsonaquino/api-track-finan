@@ -2,7 +2,7 @@ import { ulid } from 'ulid';
 
 export class TransactionEntity {
   id: string;
-  dipostedDate: string;
+  depositedDate: string;
   description: string;
   amount: number;
   userId: string;
@@ -15,7 +15,7 @@ export class TransactionEntity {
 
   constructor(params: Partial<{
     id: string;
-    dipostedDate: string;
+    depositedDate: string;
     description: string;
     amount: number;
     userId: string;
@@ -27,7 +27,7 @@ export class TransactionEntity {
     recurringMonths?: number | null;
   }>) {
     this.id = params.id || ulid();
-    this.dipostedDate = params.dipostedDate;
+    this.depositedDate = params.depositedDate;
     this.description = params.description;
     this.amount = params.amount;
     this.userId = params.userId;

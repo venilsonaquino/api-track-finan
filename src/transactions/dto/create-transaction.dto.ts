@@ -4,7 +4,7 @@ export class CreateTransactionDto {
   @IsNotEmpty()
   @IsDefined()
   @IsDateString()
-  dipostedDate: string;
+  depositedDate: string;
 
   @IsNotEmpty()
   @IsDefined()

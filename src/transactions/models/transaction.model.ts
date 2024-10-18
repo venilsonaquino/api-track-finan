@@ -24,7 +24,7 @@ export class TransactionModel extends Model<TransactionModel> {
     type: DataType.DATE,
     allowNull: false,
   })
-  dipostedDate: string;
+  depositedDate: string;
 
   @Column({
     type: DataType.STRING,

@@ -18,7 +18,7 @@ export class TransactionsService {
 
       const transaction = new TransactionEntity({
         transferType: createTransactionDto.transferType,
-        dipostedDate: createTransactionDto.dipostedDate,
+        depositedDate: createTransactionDto.depositedDate,
         description: createTransactionDto.description,
         amount: +createTransactionDto.amount,
         isRecurring: createTransactionDto.isRecurring,
@@ -43,7 +43,7 @@ export class TransactionsService {
     try {
       const transactions = createTransactionDtos.map(dto => new TransactionEntity({
         transferType: dto.transferType,
-        dipostedDate: dto.dipostedDate,
+        depositedDate: dto.depositedDate,
         description: dto.description,
         amount: +dto.amount,
         isRecurring: dto.isRecurring,
@@ -66,12 +66,12 @@ export class TransactionsService {
   async findAllByUser(userId: string) {
     const transactions = await this.transactionalModel.findAll({
       where: { userId },
-      order: [['dipostedDate', 'DESC']],
+      order: [['depositedDate', 'DESC']],
       include: ['category', 'wallet'],
     });
 
-    const groupByDipostedDate = transactions.reduce((group, transaction) => {
-      const isoDate = new Date(transaction.dipostedDate).toISOString().split('T')[0]; // Formato 'YYYY-MM-DD'
+    const groupBydepositedDate = transactions.reduce((group, transaction) => {
+      const isoDate = new Date(transaction.depositedDate).toISOString().split('T')[0]; // Formato 'YYYY-MM-DD'
     
       // Verifica se a data já está no grupo
       if (!group[isoDate]) {
@@ -86,7 +86,7 @@ export class TransactionsService {
       return group;
     }, {});
     
-    const groupedTransactionsArray = Object.values(groupByDipostedDate);
+    const groupedTransactionsArray = Object.values(groupBydepositedDate);
 
     return groupedTransactionsArray;
   }
@@ -108,7 +108,7 @@ export class TransactionsService {
 
     const transaction = new TransactionEntity({
       transferType: updateTransactionDto.transferType,
-      dipostedDate: updateTransactionDto.dipostedDate,
+      depositedDate: updateTransactionDto.depositedDate,
       description: updateTransactionDto.description,
       amount: +updateTransactionDto.amount,
       isRecurring: updateTransactionDto.isRecurring,

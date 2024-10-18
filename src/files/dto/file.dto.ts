@@ -1,6 +1,6 @@
 export class FileDto {
   transferType: string; // Correção aqui
-  depositedDate: string; // Corrigido de 'dipostedDate' para 'depositedDate'
+  depositedDate: string; // Corrigido de 'depositedDate' para 'depositedDate'
   description: string;
   amount: string;
   fitId: string | {
