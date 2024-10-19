@@ -1,8 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, UseGuards, Request, Query } from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { AuthGuard } from 'src/common/guards/auth/auth.guard';
+import { CurrentUser } from 'src/common/decorators/current-user.decorator';
+import { PayloadResponse } from 'src/auth/dto/login-response.dto';
+import { DateRangeDto } from './dto/rate-range.dto';
 
 @UseGuards(AuthGuard)
 @Controller('transactions')
@@ -22,9 +25,10 @@ export class TransactionsController {
   }
 
   @Get()
-  async findAll(@Request() req) {
-    const { user } = req;
-    return await this.transactionsService.findAllByUser(user.id);
+  async findAll(@CurrentUser() user: PayloadResponse, @Query() query: DateRangeDto) {
+    const { start_date, end_date } = query;
+    const { id } = user;
+    return await this.transactionsService.findAllAndDateRange(id, start_date, end_date);
   }
 
   @Get(':id')

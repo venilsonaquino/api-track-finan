@@ -63,9 +63,14 @@ export class TransactionsService {
   }
   
 
-  async findAllByUser(userId: string) {
+  async findAllAndDateRange(userId: string, startDate: string, endDate: string) {
     const transactions = await this.transactionalModel.findAll({
-      where: { userId },
+      where: { 
+        userId,
+        depositedDate: {
+          [Op.between]: [startDate, endDate],
+        },
+      },
       order: [['depositedDate', 'DESC']],
       include: ['category', 'wallet'],
     });

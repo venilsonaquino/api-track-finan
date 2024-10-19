@@ -20,7 +20,7 @@ export class TransactionModel extends Model<TransactionModel> {
   id: string;
 
   @Column({
-    field: 'diposted_date',
+    field: 'deposited_date',
     type: DataType.DATE,
     allowNull: false,
   })
