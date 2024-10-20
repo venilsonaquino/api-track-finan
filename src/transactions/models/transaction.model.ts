@@ -21,7 +21,7 @@ export class TransactionModel extends Model<TransactionModel> {
 
   @Column({
     field: 'deposited_date',
-    type: DataType.DATE,
+    type: DataType.DATEONLY,
     allowNull: false,
   })
   depositedDate: string;
