@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { TransactionModel } from './models/transaction.model';
 import { TransactionEntity } from './entities/transaction.entity';
 import { Op } from 'sequelize';
+import { DateRangeDto } from './dto/rate-range.dto';
 
 @Injectable()
 export class TransactionsService {
@@ -61,16 +62,30 @@ export class TransactionsService {
       throw new InternalServerErrorException(error.message);
     }
   }
-  
 
-  async findAllAndDateRange(userId: string, startDate: string, endDate: string) {
-    const transactions = await this.transactionalModel.findAll({
-      where: { 
-        userId,
-        depositedDate: {
-          [Op.between]: [startDate, endDate],
-        },
+  async findAllAndDateRange(userId: string, query: DateRangeDto) {
+
+    const { start_date, end_date, category_ids } = query;
+
+    const startDate = start_date;
+    const endDate = end_date;
+
+    const whereCondition: any = {
+      userId,
+      depositedDate: {
+        [Op.between]: [startDate, endDate],
       },
+    };
+
+    if(category_ids){
+      const categoryIdsArray = category_ids.split(',');
+      whereCondition.categoryId = {
+        [Op.in]: categoryIdsArray
+      };
+    }
+
+    const transactions = await this.transactionalModel.findAll({
+      where: whereCondition,
       order: [['depositedDate', 'DESC']],
       include: ['category', 'wallet'],
     });

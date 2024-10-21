@@ -25,10 +25,13 @@ export class TransactionsController {
   }
 
   @Get()
-  async findAll(@CurrentUser() user: PayloadResponse, @Query() query: DateRangeDto) {
-    const { start_date, end_date } = query;
+  async findAll(
+    @CurrentUser() user: PayloadResponse, 
+    @Query() query: DateRangeDto
+  ) {
+    
     const { id } = user;
-    return await this.transactionsService.findAllAndDateRange(id, start_date, end_date);
+    return await this.transactionsService.findAllAndDateRange(id, query);
   }
 
   @Get(':id')
