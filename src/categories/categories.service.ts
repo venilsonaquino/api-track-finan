@@ -14,14 +14,19 @@ export class CategoriesService {
 
   async create(createCategoryDto: CreateCategoryDto) {
 
-    const category = new CategoryEntity({
-      name: createCategoryDto.name,
-      description: createCategoryDto.description,
-      icon: createCategoryDto.icon,
-      userId: createCategoryDto.userId,
-    })
-
-    return await this.categoryModel.create(category);
+    try {
+      const category = new CategoryEntity({
+        name: createCategoryDto.name,
+        description: createCategoryDto.description,
+        icon: createCategoryDto.icon,
+        color: createCategoryDto.color,
+        userId: createCategoryDto.userId,
+      })
+  
+      return await this.categoryModel.create(category);
+    } catch (error) {
+      throw Error(error)
+    }
   }
 
   async findAllByUser(userId: string) {

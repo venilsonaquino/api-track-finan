@@ -6,6 +6,7 @@ import { TransactionModel } from './models/transaction.model';
 import { TransactionEntity } from './entities/transaction.entity';
 import { Op } from 'sequelize';
 import { DateRangeDto } from './dto/rate-range.dto';
+import { groupTransactionsAsArray } from 'src/common/utils/group-transaction-by-date';
 
 @Injectable()
 export class TransactionsService {
@@ -55,7 +56,6 @@ export class TransactionsService {
         walletId: dto.walletId
       }));
   
-  
       return await this.transactionalModel.bulkCreate(transactions);
     } catch (error) {
       console.error('Error creating transactions:', error.message);
@@ -90,25 +90,21 @@ export class TransactionsService {
       include: ['category', 'wallet'],
     });
 
-    const groupBydepositedDate = transactions.reduce((group, transaction) => {
-      const isoDate = new Date(transaction.depositedDate).toISOString().split('T')[0]; // Formato 'YYYY-MM-DD'
-    
-      // Verifica se a data já está no grupo
-      if (!group[isoDate]) {
-        group[isoDate] = {
-          date: isoDate,
-          endOfDayBalance: null,
-          transactions: []
-        };
-      }
-    
-      group[isoDate].transactions.push(transaction);
-      return group;
-    }, {});
-    
-    const groupedTransactionsArray = Object.values(groupBydepositedDate);
+    const balance = 452;
+    const income = 789;
+    const expense = 789;
+    const monthly_balance = 1520;
 
-    return groupedTransactionsArray;
+    const groupBydepositedDate = groupTransactionsAsArray(transactions);
+    return {
+      "records": groupBydepositedDate,
+      "summary": {
+        "balance": balance,
+        "income": income,
+        "expense": expense,
+        "monthly_balance": monthly_balance
+      }
+    }
   }
 
   async findOne(id: string, userId: string) {

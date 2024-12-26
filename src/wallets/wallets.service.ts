@@ -69,4 +69,9 @@ export class WalletsService {
     
     return;
   }
+
+  async calculateBalance(userId: string): Promise<number> {
+    const totalBalance = await this.walletModel.sum('balance', { where: { userId } });
+    return totalBalance || 0;
+  }
 }

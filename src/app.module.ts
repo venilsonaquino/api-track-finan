@@ -30,9 +30,9 @@ import { WalletsModule } from './wallets/wallets.module';
         paranoid: true,
       },
       autoLoadModels: true,
-      synchronize: false,
+      synchronize: true,
       sync: {
-        alter: false,
+        alter: true,
       },
       logging: false,
       benchmark: false,
