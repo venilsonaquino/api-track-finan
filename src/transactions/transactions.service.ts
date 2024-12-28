@@ -7,12 +7,14 @@ import { TransactionEntity } from './entities/transaction.entity';
 import { Op } from 'sequelize';
 import { DateRangeDto } from './dto/rate-range.dto';
 import { groupTransactionsAsArray } from 'src/common/utils/group-transaction-by-date';
+import { WalletFacade } from 'src/wallets/facades/wallet.facade';
 
 @Injectable()
 export class TransactionsService {
   constructor(
     @InjectModel(TransactionModel)
     private readonly transactionalModel: typeof TransactionModel,
+    private readonly walletFacade: WalletFacade
   ) {}
 
   async create(createTransactionDto: CreateTransactionDto, userId: string) {
@@ -90,7 +92,7 @@ export class TransactionsService {
       include: ['category', 'wallet'],
     });
 
-    const balance = 452;
+    const balance = await this.walletFacade.getWalletBalance(userId);
     const income = TransactionEntity.calculateIncome(transactions as TransactionEntity[]);
     const expense = TransactionEntity.calculateExpense(transactions as TransactionEntity[]);
     const monthly_balance = TransactionEntity.calculateMonthlyBalance(income, expense);
