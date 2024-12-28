@@ -38,4 +38,20 @@ export class TransactionEntity {
     this.isRecurring = params.isRecurring;
     this.recurringMonths = params.recurringMonths;
   }
+
+  public static calculateIncome(transactions: TransactionEntity[]): number {
+    return transactions
+      .filter(t => t.amount > 0 && t.transferType === 'CREDIT')
+      .reduce((sum, t) => sum + t.amount, 0);
+  }
+
+  public static calculateExpense(transactions: TransactionEntity[]): number {
+    return transactions
+    .filter(t => t.amount < 0)
+    .reduce((sum, t) => sum + t.amount, 0);
+  }
+
+  public static calculateMonthlyBalance(income: number, expense: number): number {
+    return income + expense;
+  }
 }

@@ -91,17 +91,17 @@ export class TransactionsService {
     });
 
     const balance = 452;
-    const income = 789;
-    const expense = 789;
-    const monthly_balance = 1520;
+    const income = TransactionEntity.calculateIncome(transactions as TransactionEntity[]);
+    const expense = TransactionEntity.calculateExpense(transactions as TransactionEntity[]);
+    const monthly_balance = TransactionEntity.calculateMonthlyBalance(income, expense);
 
     const groupBydepositedDate = groupTransactionsAsArray(transactions);
     return {
       "records": groupBydepositedDate,
       "summary": {
-        "balance": balance,
-        "income": income,
-        "expense": expense,
+        "current_balance": balance,
+        "monthly_income": income,
+        "monthly_expense": expense,
         "monthly_balance": monthly_balance
       }
     }
