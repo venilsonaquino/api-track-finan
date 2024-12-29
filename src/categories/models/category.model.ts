@@ -41,7 +41,7 @@ export class CategoryModel extends Model<CategoryModel>{
   @Column({
     field: 'user_id',
     type: 'VARCHAR(26)',
-    allowNull: false,
+    allowNull: true,
   })
   userId: string;
 }

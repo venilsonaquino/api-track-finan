@@ -4,6 +4,7 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { CategoryModel } from './models/category.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { CategoryEntity } from './entities/category.entity';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class CategoriesService {
@@ -31,7 +32,9 @@ export class CategoriesService {
 
   async findAllByUser(userId: string) {
     return await this.categoryModel.findAll({
-      where: {userId},
+      where: {
+        [Op.or]: [{userId}, {userId: null}]
+      },
       order: [['created_at', 'DESC']],
     });
   }
