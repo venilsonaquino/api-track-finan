@@ -1,10 +1,10 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { TransactionModel } from './models/transaction.model';
 import { TransactionEntity } from './entities/transaction.entity';
-import { Op } from 'sequelize';
+import { Op, ValidationError } from 'sequelize';
 import { DateRangeDto } from './dto/rate-range.dto';
 import { groupTransactionsAsArray } from 'src/common/utils/group-transaction-by-date';
 import { WalletFacade } from 'src/wallets/facades/wallet.facade';
@@ -36,7 +36,8 @@ export class TransactionsService {
       return await this.transactionalModel.create(transaction);
     } catch (error) {
       console.error('Error creating transaction:', error);
-      throw new InternalServerErrorException('Failed to create transaction');
+      const detailMessage = error?.parent?.detail || error?.message;
+      throw new InternalServerErrorException(detailMessage);
     }
   }
 
@@ -60,8 +61,9 @@ export class TransactionsService {
   
       return await this.transactionalModel.bulkCreate(transactions);
     } catch (error) {
-      console.error('Error creating transactions:', error.message);
-      throw new InternalServerErrorException(error.message);
+      console.error('Error creating transaction:', error);
+      const detailMessage = error?.parent?.detail || error?.message;
+      throw new InternalServerErrorException(detailMessage);
     }
   }
 
@@ -180,4 +182,25 @@ export class TransactionsService {
     return previousTransactions;
   }
   
+  async previousFitIds(fitIds: string[], userId: string): Promise<string[]> {
+    try {
+      // Busca por transações que possuem fitId e o userId correspondente
+      const transactions = await this.transactionalModel.findAll({
+        where: {
+          fitId: fitIds,
+          userId: userId
+        },
+        attributes: ['fitId']
+      });
+  
+      return transactions.map(transaction => transaction.fitId);
+    } catch (error) {
+
+      console.error('Error fetching previous fitIds: ', error);
+      const detailMessage = error?.parent?.detail || error?.message;
+      throw new InternalServerErrorException(detailMessage);
+
+    }
+  }
+
 }
