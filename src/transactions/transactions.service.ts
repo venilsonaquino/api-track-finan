@@ -5,7 +5,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { TransactionModel } from './models/transaction.model';
 import { TransactionEntity } from './entities/transaction.entity';
 import { Op, ValidationError } from 'sequelize';
-import { DateRangeDto } from './dto/rate-range.dto';
+import { DateRangeDto } from './dto/date-range.dto';
 import { groupTransactionsAsArray } from 'src/common/utils/group-transaction-by-date';
 import { WalletFacade } from 'src/wallets/facades/wallet.facade';
 

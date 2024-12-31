@@ -1,11 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, UseGuards, Request, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, UseGuards, Request, Query, Put } from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { AuthGuard } from 'src/common/guards/auth/auth.guard';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { PayloadResponse } from 'src/auth/dto/login-response.dto';
-import { DateRangeDto } from './dto/rate-range.dto';
+import { DateRangeDto } from './dto/date-range.dto';
 
 @UseGuards(AuthGuard)
 @Controller('transactions')
@@ -40,7 +40,7 @@ export class TransactionsController {
     return await this.transactionsService.findOne(id, user.id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   async update(
     @Param('id') id: string, 
     @Body() updateTransactionDto: UpdateTransactionDto,

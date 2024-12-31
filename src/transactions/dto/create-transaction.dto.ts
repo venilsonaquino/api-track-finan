@@ -18,8 +18,8 @@ export class CreateTransactionDto {
   
   @IsNotEmpty()
   @IsDefined()
-  @IsString()
-  amount: string;
+  @IsNumber()
+  amount: number;
 
   @IsEmpty()
   @IsOptional()
@@ -42,7 +42,7 @@ export class CreateTransactionDto {
   walletId: string;
 
   @IsNotEmpty()
-  @IsDefined()
+  @IsOptional()
   @IsString()
   fitId: string;
 }

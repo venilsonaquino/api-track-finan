@@ -48,7 +48,7 @@ export class TransactionModel extends Model<TransactionModel> {
   @Column({
     field: 'fit_id',
     type: DataType.STRING,
-    allowNull: false,
+    allowNull: true,
     unique: true,
   })
   fitId: string;
