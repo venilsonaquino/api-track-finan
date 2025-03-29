@@ -18,8 +18,8 @@ services:
   postgres:
     image: postgres
     volumes:
-      - my_postgres:/var/lib/postgresql/data
-    container_name: my_postgres
+      - track_finan_postgres:/var/lib/postgresql/data
+    container_name: track_finan_postgres
     environment:
       POSTGRES_PASSWORD: "root"
       POSTGRES_USER: "root"
@@ -70,4 +70,4 @@ networks:
     driver: bridge
 
 volumes:
-  my_postgres:
+  track_finan_postgres:

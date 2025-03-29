@@ -195,7 +195,6 @@ export class TransactionsService {
   
       return transactions.map(transaction => transaction.fitId);
     } catch (error) {
-
       console.error('Error fetching previous fitIds: ', error);
       const detailMessage = error?.parent?.detail || error?.message;
       throw new InternalServerErrorException(detailMessage);
