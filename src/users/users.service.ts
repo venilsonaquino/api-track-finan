@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserModel } from './models/user.model';
@@ -19,7 +19,12 @@ export class UsersService {
   
   async create(createUserDto: CreateUserDto) {
 
-    const {password} = createUserDto
+    const {email, password} = createUserDto;
+
+    const existingUser = await this.userModel.findOne({ where: { email } });
+    if (existingUser) {
+      throw new ConflictException('E-mail is already in use.');
+    };
 
     const hashedPassword = await bcrypt.hash(password, 10);
     createUserDto.password = hashedPassword;
@@ -28,7 +33,7 @@ export class UsersService {
       email: createUserDto.email,
       fullName: createUserDto.fullName,
       password: hashedPassword,
-    })
+    });
   
     const newUser = await this.userModel.create(user);
 
