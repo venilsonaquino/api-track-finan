@@ -6,12 +6,15 @@ import { InjectModel } from '@nestjs/sequelize';
 import { UserEntity } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { ApiNoContentResponse } from '@nestjs/swagger';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { UserCreatedEvent } from './events/user-created.event';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(UserModel)
     private readonly userModel: typeof UserModel,
+    private eventEmitter: EventEmitter2
   ) {}
   
   async create(createUserDto: CreateUserDto) {
@@ -28,6 +31,11 @@ export class UsersService {
     })
   
     const newUser = await this.userModel.create(user);
+
+    this.eventEmitter.emit('user.created', 
+      new UserCreatedEvent(newUser.id, newUser.email, newUser.fullName),
+    );
+
     return newUser;
   }
 
