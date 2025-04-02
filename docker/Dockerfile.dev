@@ -3,16 +3,15 @@ FROM node:18
 ENV TZ=America/Sao_Paulo
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+WORKDIR /app
 
 RUN npm install -g @nestjs/cli
 
-COPY package.json /usr/src/app/
+# Copiar apenas os arquivos de dependência primeiro
+COPY package*.json ./
 RUN npm install
 
-COPY . /usr/src/app
-
+# Não vamos copiar o código fonte aqui, pois será montado via volume
 EXPOSE 8080
 
 CMD [ "npm", "run", "start:dev" ]
