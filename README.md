@@ -59,11 +59,6 @@ npm run start:dev
 npm run start:prod
 ```
 
-### Frontend
-```bash
-# Desenvolvimento
-npm run dev
-
 # Produção
 npm run build
 npm run preview
