@@ -1,7 +1,7 @@
 # Track Finan - Rastreamento Financeiro
 
 <p align="center">
-  <img src="src/assets/logo.png" alt="Track Finan Logo" width="200"/>
+  <img src="https://github.com/user-attachments/assets/74feeb90-d71e-49d0-aa05-bb06d5d9ed38" alt="Track Finan Logo" width="200"/>
 </p>
 
 ## Descrição
