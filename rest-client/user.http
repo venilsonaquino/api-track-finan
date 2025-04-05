@@ -19,7 +19,7 @@ PUT http://localhost:3000/users/01J986Z9GKYPVN1JJ0TTJ8DDTS
 Content-Type: application/json
 
 {
-  "full_name": "John Doe Updated",
+  "fullName": "John Doe Updated",
   "password": "newSecurePassword123"
 }
 

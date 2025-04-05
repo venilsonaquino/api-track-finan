@@ -25,25 +25,25 @@ export class AuthService {
     const payload = { 
       id: user.id, 
       email: user.email,
-      full_name: user.fullName, 
+      fullNname: user.fullName, 
       plan: user.plan
     };
 
     const token = await this.jwtService.signAsync(payload, { expiresIn: '1h' });
-    const refresh_token = await this.jwtService.signAsync(payload, { expiresIn: '7d' });
+    const refreshToken = await this.jwtService.signAsync(payload, { expiresIn: '7d' });
 
-    this.usersService.updateRefreshToken(user.id, refresh_token);
+    this.usersService.updateRefreshToken(user.id, refreshToken);
 
     return {
       token,
-      refresh_token,
+      refreshToken,
       user: {
         id: user.id,
         email: user.email,
-        full_name: user.fullName, 
+        fullName: user.fullName, 
         plan: user.plan,
       },
-      expires_in: 3600
+      expiresIn: 3600
     };
   }
 
@@ -59,14 +59,14 @@ export class AuthService {
     this.usersService.updateRefreshToken(user.id, new_refresh_token);
     return {
       token,
-      refresh_token: new_refresh_token,
+      refreshToken: new_refresh_token,
       user: {
         id: user.id,
         email: user.email,
-        full_name: user.fullName,
+        fullName: user.fullName,
         plan: user.plan,
       },
-      expires_in: 3600
+      expiresIn: 3600
     };
   }
 }
