@@ -1,5 +1,4 @@
-import { Transform } from 'class-transformer';
-import { IsArray, IsDateString, IsOptional, IsString } from 'class-validator';
+import { IsDateString, IsOptional, IsString, IsBoolean } from 'class-validator';
 
 export class DateRangeDto {
   @IsDateString({}, { message: 'Invalid start_date format. Expected format: YYYY-MM-DD' })
@@ -11,4 +10,8 @@ export class DateRangeDto {
   @IsOptional()
   @IsString()
   category_ids: string
+
+  @IsOptional()
+  @IsString()
+  wallet_ids: string
 }

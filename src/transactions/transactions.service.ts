@@ -69,7 +69,7 @@ export class TransactionsService {
 
   async findAllAndDateRange(userId: string, query: DateRangeDto) {
 
-    const { start_date, end_date, category_ids } = query;
+    const { start_date, end_date, category_ids, wallet_ids } = query;
 
     const startDate = start_date;
     const endDate = end_date;
@@ -85,6 +85,13 @@ export class TransactionsService {
       const categoryIdsArray = category_ids.split(',');
       whereCondition.categoryId = {
         [Op.in]: categoryIdsArray
+      };
+    }
+
+    if(wallet_ids){
+      const walletIdsArray = wallet_ids.split(',');
+      whereCondition.walletId = {
+        [Op.in]: walletIdsArray
       };
     }
 
