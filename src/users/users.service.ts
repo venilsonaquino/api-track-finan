@@ -5,9 +5,9 @@ import { UserModel } from './models/user.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { UserEntity } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
-import { ApiNoContentResponse } from '@nestjs/swagger';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UserCreatedEvent } from './events/user-created.event';
+import { generateShortHash } from 'src/common/utils/generate-short-hash';
 
 @Injectable()
 export class UsersService {
@@ -33,6 +33,7 @@ export class UsersService {
       email: createUserDto.email,
       fullName: createUserDto.fullName,
       password: hashedPassword,
+      emailVerificationToken: generateShortHash(),
     });
   
     const newUser = await this.userModel.create(user);

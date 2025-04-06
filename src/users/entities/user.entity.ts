@@ -8,6 +8,9 @@ export class UserEntity {
   fullName: string;
   plan: UserPlan;
   refreshToken?: string;
+  avatar?: string;
+  isEmailVerified?: boolean;
+  emailVerificationToken?: string;
 
   constructor(params: Partial<{
     id: string;
@@ -16,6 +19,9 @@ export class UserEntity {
     fullName: string;
     plan: UserPlan;
     refreshToken?: string;
+    avatar?: string;
+    isEmailVerified?: boolean;
+    emailVerificationToken?: string;
   }>) {
     this.id = params.id || ulid();
     this.email = params.email;
@@ -23,5 +29,8 @@ export class UserEntity {
     this.fullName = params.fullName;
     this.plan = params.plan || UserPlan.Free;
     this.refreshToken = params.refreshToken;
+    this.avatar = params.avatar;
+    this.isEmailVerified = params.isEmailVerified;
+    this.emailVerificationToken = params.emailVerificationToken;
   }
 }
