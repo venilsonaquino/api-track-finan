@@ -7,17 +7,28 @@ import { MailProvider } from '../../interfaces/mail-provider.interface';
 @Injectable()
 export class NodemailerMailProvider implements MailProvider {
   private transporter: nodemailer.Transporter;
-  private readonly senderEmail = process.env.MAILTRAP_SENDER_EMAIL!;
-  private readonly token = "061d8389f82b88c6480ec231538f3c90";
   private readonly logger = new Logger(NodemailerMailProvider.name);
+  private readonly mailerUser = process.env.MAILER_USER;
+  private readonly mailerPassword = process.env.MAILER_PASSWORD;
 
   constructor() {
+
+    if (!this.mailerUser) {
+      this.logger.error('MAILER_USER não está definido');
+      throw new Error('MAILER_USER não está definido');
+    }
+
+    if (!this.mailerPassword) {
+      this.logger.error('MAILER_PASSWORD não está definido');
+      throw new Error('MAILER_PASSWORD não está definido');
+    }
+
     this.transporter = nodemailer.createTransport({
       host: 'sandbox.smtp.mailtrap.io',
       port: 2525,
       auth: {
-        user: "d7cc3cb5a1e7db",
-        pass: "061d8389f82b88c6480ec231538f3c90",
+        user: this.mailerUser,
+        pass: this.mailerPassword,
       },
     });
   }

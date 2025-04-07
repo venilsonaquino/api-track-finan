@@ -6,7 +6,7 @@ import { MailProvider } from '../../interfaces/mail-provider.interface';
 export class MailtrapMailProvider implements MailProvider {
   private client: MailtrapClient;
   private readonly senderEmail = process.env.MAILTRAP_SENDER_EMAIL!;
-  private readonly token = "061d8389f82b88c6480ec231538f3c90";
+  private readonly token = "";
   private readonly logger = new Logger(MailtrapMailProvider.name);
 
   constructor() {
@@ -33,7 +33,6 @@ export class MailtrapMailProvider implements MailProvider {
     try {
       const sender = { name: fromName, email: fromEmail };
       
-      // Verifica se o texto contém HTML
       const isHtml = text.includes('<html') || text.includes('<body') || text.includes('<div');
       
       const mailOptions: any = {
