@@ -41,10 +41,13 @@ export class UsersService {
     const newUser = await this.userModel.create(user);
 
     this.eventEmitter.emit('user.created', 
-      new UserCreatedEvent(newUser.id, newUser.email, newUser.fullName),
+      new UserCreatedEvent(
+        newUser.id, 
+        newUser.email, 
+        newUser.fullName, 
+        newUser.emailVerificationToken
+      )
     );
-
-    await this.mailService.sendUserWelcome(newUser.email, newUser.fullName);
 
     return newUser;
   }

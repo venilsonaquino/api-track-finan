@@ -3,5 +3,6 @@ export class UserCreatedEvent {
     public readonly userId: string,
     public readonly email: string,
     public readonly fullName: string,
+    public readonly emailVerificationToken: string,
   ) {}
 }

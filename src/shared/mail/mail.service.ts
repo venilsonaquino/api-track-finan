@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { MAIL_PROVIDER } from './mail.constants';
 import { MailProvider } from './interfaces/mail-provider.interface';
 import { getEmailTemplate } from './templates/email-template';
+import * as hbs from 'nodemailer-express-handlebars';
 
 @Injectable()
 export class MailService {

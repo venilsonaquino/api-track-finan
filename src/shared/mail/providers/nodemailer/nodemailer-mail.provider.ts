@@ -1,7 +1,5 @@
-// src/shared/mail/providers/nodemailer/nodemailer-mail.provider.ts
-
 import * as nodemailer from 'nodemailer';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';  
 import { MailProvider } from '../../interfaces/mail-provider.interface';
 
 @Injectable()
