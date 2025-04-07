@@ -1,8 +1,55 @@
 import { Ofx } from "ofx-data-extractor";
 import { FileProcessingStrategy } from "../interfaces/file-processing.strategy";
 import { InternalServerErrorException, UnprocessableEntityException } from "@nestjs/common";
-import { STRTTRN, Bank, CreditCard, OfxStructure, FINANCIAL_INSTITUTION } from "ofx-data-extractor/dist/@types/ofx";
+import { OfxStructure } from "ofx-data-extractor/dist/@types/ofx";
 import { FileDto } from "../dto/file.dto";
+
+// Definindo os tipos que faltam
+interface STRTTRN {
+  TRNTYPE: string;
+  DTPOSTED: string | { date: string };
+  TRNAMT: number;
+  FITID: string | { transactionCode: string };
+  MEMO?: string;
+  CHECKNUM?: string;
+}
+
+interface Bank {
+  STMTTRNRS?: {
+    STMTRS?: {
+      BANKTRANLIST?: {
+        STRTTRN?: STRTTRN[];
+      };
+      BANKACCTFROM?: {
+        ACCTID: string;
+        ACCTT?: string;
+      };
+      LEDGERBAL?: {
+        BALAMT: number;
+        DTASOF: string | { date: string };
+      };
+      CURDEF?: string;
+    };
+  };
+}
+
+interface CreditCard {
+  CCSTMTTRNRS?: {
+    CCSTMTRS?: {
+      BANKTRANLIST?: {
+        STRTTRN?: STRTTRN[];
+      };
+      CCACCTFROM?: {
+        ACCTID: string;
+      };
+      LEDGERBAL?: {
+        BALAMT: number;
+        DTASOF: string | { date: string };
+      };
+      CURDEF?: string;
+    };
+  };
+}
 
 export class OfxStrategy implements FileProcessingStrategy {
   parse(file: Express.Multer.File): FileDto[] {
@@ -50,9 +97,9 @@ export class OfxStrategy implements FileProcessingStrategy {
     
     // Tentar obter a moeda do banco ou cartão de crédito
     if (ofxStructure.OFX.BANKMSGSRSV1 && ofxStructure.OFX.BANKMSGSRSV1.STMTTRNRS && ofxStructure.OFX.BANKMSGSRSV1.STMTTRNRS.STMTRS) {
-      currency = ofxStructure.OFX.BANKMSGSRSV1.STMTTRNRS.STMTRS.CURDEF || currency;
+      currency = ofxStructure.OFX.BANKMSGSRSV1.STMTTRS.CURDEF || currency;
     } else if (ofxStructure.OFX.CREDITCARDMSGSRSV1 && ofxStructure.OFX.CREDITCARDMSGSRSV1.CCSTMTTRNRS && ofxStructure.OFX.CREDITCARDMSGSRSV1.CCSTMTTRNRS.CCSTMTRS) {
-      currency = ofxStructure.OFX.CREDITCARDMSGSRSV1.CCSTMTTRNRS.CCSTMTRS.CURDEF || currency;
+      currency = ofxStructure.OFX.CREDITCARDMSGSRSV1.CCSTMTTRS.CURDEF || currency;
     }
     
     return {
@@ -151,13 +198,13 @@ export class OfxStrategy implements FileProcessingStrategy {
     source: 'BANK' | 'CREDIT_CARD',
     bankInfo: { bankName: string; bankId: string; currency: string },
     accountInfo?: { accountId: string; accountType: string },
-    ledgerBal?: { BALAMT: string; DTASOF: any }
+    ledgerBal?: { BALAMT: number; DTASOF: any }
   ): FileDto {
     return {
       transferType: transfer.TRNTYPE,
       depositedDate: typeof transfer.DTPOSTED == 'string' ? transfer.DTPOSTED : transfer.DTPOSTED.date,
-      description: transfer.MEMO,
-      amount: transfer.TRNAMT,
+      description: transfer.MEMO || '',
+      amount: transfer.TRNAMT.toString(),
       fitId: typeof transfer.FITID === 'string' ? transfer.FITID : transfer.FITID.transactionCode,
       category: null,
       isRecurring: null,
@@ -172,7 +219,7 @@ export class OfxStrategy implements FileProcessingStrategy {
       transactionDate: typeof transfer.DTPOSTED == 'string' ? transfer.DTPOSTED : transfer.DTPOSTED.date,
       checkNumber: transfer.CHECKNUM,
       transactionSource: source,
-      balance: ledgerBal?.BALAMT,
+      balance: ledgerBal?.BALAMT.toString(),
       balanceDate: ledgerBal?.DTASOF ? (typeof ledgerBal.DTASOF == 'string' ? ledgerBal.DTASOF : ledgerBal.DTASOF.date) : undefined
     };
   }

@@ -7,9 +7,15 @@ import { CreateCategoriesListener } from './listeners/create-categories.listener
 import { CategoriesModule } from 'src/categories/categories.module';
 import { WalletsModule } from 'src/wallets/wallets.module';
 import { CreateWalletListener } from './listeners/create-wallet.listener';
+import { MailModule } from 'src/shared/mail/mail.module';
 
 @Module({
-  imports: [SequelizeModule.forFeature([UserModel]), CategoriesModule, WalletsModule],
+  imports: [
+    SequelizeModule.forFeature([UserModel]), 
+    CategoriesModule, 
+    WalletsModule,
+    MailModule
+  ],
   controllers: [UsersController],
   providers: [UsersService, CreateCategoriesListener, CreateWalletListener],
   exports: [UsersService],

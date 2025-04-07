@@ -8,13 +8,15 @@ import * as bcrypt from 'bcrypt';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UserCreatedEvent } from './events/user-created.event';
 import { generateShortHash } from 'src/common/utils/generate-short-hash';
+import { MailService } from 'src/shared/mail/mail.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(UserModel)
     private readonly userModel: typeof UserModel,
-    private eventEmitter: EventEmitter2
+    private eventEmitter: EventEmitter2,
+    private readonly mailService: MailService
   ) {}
   
   async create(createUserDto: CreateUserDto) {
@@ -41,6 +43,8 @@ export class UsersService {
     this.eventEmitter.emit('user.created', 
       new UserCreatedEvent(newUser.id, newUser.email, newUser.fullName),
     );
+
+    await this.mailService.sendUserWelcome(newUser.email, newUser.fullName);
 
     return newUser;
   }
