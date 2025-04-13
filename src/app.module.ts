@@ -8,9 +8,11 @@ import { CategoriesModule } from './categories/categories.module';
 import { FilesModule } from './files/files.module';
 import { WalletsModule } from './wallets/wallets.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { LoggerModule } from './config/logging/logger.module';
 
 @Module({
   imports: [
+    LoggerModule,
     EventEmitterModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true
