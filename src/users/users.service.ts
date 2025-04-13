@@ -44,7 +44,10 @@ export class UsersService {
       new UserCreatedEvent(newUser.id, newUser.email, newUser.fullName),
     );
 
-    await this.mailService.sendUserWelcome(newUser.email, newUser.fullName);
+    this.mailService.sendUserWelcome(user.email, user.fullName)
+    .catch(error => {
+      console.error('Erro ao enviar e-mail de boas-vindas:', error);
+    });
 
     return newUser;
   }

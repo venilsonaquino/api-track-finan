@@ -6,4 +6,11 @@ export interface MailProvider {
     fromName?: string,
     fromEmail?: string
   ): Promise<void>;
+
+  sendMailWithTemplate(
+    to: string,
+    subject: string,
+    template: string,
+    context: any
+  ): Promise<void>;
 }

@@ -8,7 +8,7 @@ import { FileDto } from "../dto/file.dto";
 interface STRTTRN {
   TRNTYPE: string;
   DTPOSTED: string | { date: string };
-  TRNAMT: number;
+  TRNAMT: string;
   FITID: string | { transactionCode: string };
   MEMO?: string;
   CHECKNUM?: string;
@@ -25,7 +25,7 @@ interface Bank {
         ACCTT?: string;
       };
       LEDGERBAL?: {
-        BALAMT: number;
+        BALAMT: string;
         DTASOF: string | { date: string };
       };
       CURDEF?: string;
@@ -43,7 +43,7 @@ interface CreditCard {
         ACCTID: string;
       };
       LEDGERBAL?: {
-        BALAMT: number;
+        BALAMT: string;
         DTASOF: string | { date: string };
       };
       CURDEF?: string;
@@ -97,9 +97,9 @@ export class OfxStrategy implements FileProcessingStrategy {
     
     // Tentar obter a moeda do banco ou cartão de crédito
     if (ofxStructure.OFX.BANKMSGSRSV1 && ofxStructure.OFX.BANKMSGSRSV1.STMTTRNRS && ofxStructure.OFX.BANKMSGSRSV1.STMTTRNRS.STMTRS) {
-      currency = ofxStructure.OFX.BANKMSGSRSV1.STMTTRS.CURDEF || currency;
+      currency = ofxStructure.OFX.BANKMSGSRSV1.STMTTRNRS.STMTRS.CURDEF || currency;
     } else if (ofxStructure.OFX.CREDITCARDMSGSRSV1 && ofxStructure.OFX.CREDITCARDMSGSRSV1.CCSTMTTRNRS && ofxStructure.OFX.CREDITCARDMSGSRSV1.CCSTMTTRNRS.CCSTMTRS) {
-      currency = ofxStructure.OFX.CREDITCARDMSGSRSV1.CCSTMTTRS.CURDEF || currency;
+      currency = ofxStructure.OFX.CREDITCARDMSGSRSV1.CCSTMTTRNRS.CCSTMTRS.CURDEF || currency;
     }
     
     return {
@@ -198,13 +198,13 @@ export class OfxStrategy implements FileProcessingStrategy {
     source: 'BANK' | 'CREDIT_CARD',
     bankInfo: { bankName: string; bankId: string; currency: string },
     accountInfo?: { accountId: string; accountType: string },
-    ledgerBal?: { BALAMT: number; DTASOF: any }
+    ledgerBal?: { BALAMT: string; DTASOF: any }
   ): FileDto {
     return {
       transferType: transfer.TRNTYPE,
       depositedDate: typeof transfer.DTPOSTED == 'string' ? transfer.DTPOSTED : transfer.DTPOSTED.date,
       description: transfer.MEMO || '',
-      amount: transfer.TRNAMT.toString(),
+      amount: transfer.TRNAMT,
       fitId: typeof transfer.FITID === 'string' ? transfer.FITID : transfer.FITID.transactionCode,
       category: null,
       isRecurring: null,
@@ -219,7 +219,7 @@ export class OfxStrategy implements FileProcessingStrategy {
       transactionDate: typeof transfer.DTPOSTED == 'string' ? transfer.DTPOSTED : transfer.DTPOSTED.date,
       checkNumber: transfer.CHECKNUM,
       transactionSource: source,
-      balance: ledgerBal?.BALAMT.toString(),
+      balance: ledgerBal?.BALAMT,
       balanceDate: ledgerBal?.DTASOF ? (typeof ledgerBal.DTASOF == 'string' ? ledgerBal.DTASOF : ledgerBal.DTASOF.date) : undefined
     };
   }

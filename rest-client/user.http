@@ -1,11 +1,11 @@
 ### Teste de Rota: Criar Usuário
-POST http://localhost:3000/users
+POST http://localhost:8080/users
 Content-Type: application/json
 
 {
-  "email": "john.doe@example.com",
-  "password": "securePassword123",
-  "fullName": "John Doe"
+  "email": "admin8@trackfinance.com",
+  "password": "admin",
+  "fullName": "Admin"
 }
 
 ### Teste de Rota: Obter Todos os Usuários

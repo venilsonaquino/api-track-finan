@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Bem-vindo ao TrackFinan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .content {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .features {
+            margin: 20px 0;
+        }
+        .features ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .features li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+        .features li:before {
+            content: "✓";
+            color: #4CAF50;
+            position: absolute;
+            left: 0;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Bem-vindo ao TrackFinan!</h1>
+    </div>
+    
+    <div class="content">
+        <p>Olá <strong>{{userName}}</strong>,</p>
+        <p>Bem-vindo à nossa plataforma de controle financeiro!</p>
+        <p>Estamos muito felizes em tê-lo conosco. Com o TrackFinance, você poderá:</p>
+        
+        <div class="features">
+            <ul>
+                {{#each features}}
+                <li>{{this}}</li>
+                {{/each}}
+            </ul>
+        </div>
+        
+        <p>Se precisar de ajuda, não hesite em entrar em contato conosco.</p>
+    </div>
+    
+    <div class="footer">
+        <p>Atenciosamente,<br>Equipe TrackFinance</p>
+    </div>
+</body>
+</html> 

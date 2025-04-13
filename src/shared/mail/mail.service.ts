@@ -12,22 +12,18 @@ export class MailService {
 
   async sendUserWelcome(to: string, userName: string) {
     const subject = 'Bem-vindo ao TrackFinan!';
-    const content = `
-      <p>Olá <strong>${userName}</strong>,</p>
-      <p>Bem-vindo à nossa plataforma de controle financeiro!</p>
-      <p>Estamos muito felizes em tê-lo conosco. Com o TrackFinance, você poderá:</p>
-      <ul>
-        <li>Controlar suas receitas e despesas</li>
-        <li>Acompanhar seu saldo em tempo real</li>
-        <li>Gerar relatórios financeiros</li>
-        <li>Categorizar suas transações</li>
-      </ul>
-      <p>Se precisar de ajuda, não hesite em entrar em contato conosco.</p>
-      <p>Atenciosamente,<br>Equipe TrackFinance</p>
-    `;
     
-    const htmlBody = getEmailTemplate('Bem-vindo ao TrackFinan', content);
-    await this.mailProvider.sendMail(to, subject, htmlBody);
+    const context = {
+      userName,
+      features: [
+        'Controlar suas receitas e despesas',
+        'Acompanhar seu saldo em tempo real',
+        'Gerar relatórios financeiros',
+        'Categorizar suas transações'
+      ]
+    };
+
+    await this.mailProvider.sendMailWithTemplate(to, subject, 'welcome', context);
   }
 
   async sendPasswordReset(to: string, resetToken: string) {
