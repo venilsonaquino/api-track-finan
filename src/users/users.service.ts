@@ -5,16 +5,18 @@ import { UserModel } from './models/user.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { UserEntity } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
-import { ApiNoContentResponse } from '@nestjs/swagger';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UserCreatedEvent } from './events/user-created.event';
+import { generateShortHash } from 'src/common/utils/generate-short-hash';
+import { MailService } from 'src/shared/mail/mail.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(UserModel)
     private readonly userModel: typeof UserModel,
-    private eventEmitter: EventEmitter2
+    private eventEmitter: EventEmitter2,
+    private readonly mailService: MailService
   ) {}
   
   async create(createUserDto: CreateUserDto) {
@@ -33,6 +35,7 @@ export class UsersService {
       email: createUserDto.email,
       fullName: createUserDto.fullName,
       password: hashedPassword,
+      emailVerificationToken: generateShortHash(),
     });
   
     const newUser = await this.userModel.create(user);
@@ -40,6 +43,11 @@ export class UsersService {
     this.eventEmitter.emit('user.created', 
       new UserCreatedEvent(newUser.id, newUser.email, newUser.fullName),
     );
+
+    this.mailService.sendUserWelcome(user.email, user.fullName)
+    .catch(error => {
+      console.error('Erro ao enviar e-mail de boas-vindas:', error);
+    });
 
     return newUser;
   }

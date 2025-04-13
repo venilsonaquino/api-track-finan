@@ -17,5 +17,10 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"],
+  "copyFiles": {
+    "src/shared/mail/templates/*.hbs": "dist/shared/mail/templates/"
   }
 }

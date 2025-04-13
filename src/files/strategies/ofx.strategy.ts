@@ -1,8 +1,55 @@
 import { Ofx } from "ofx-data-extractor";
 import { FileProcessingStrategy } from "../interfaces/file-processing.strategy";
 import { InternalServerErrorException, UnprocessableEntityException } from "@nestjs/common";
-import { STRTTRN, Bank, CreditCard, OfxStructure, FINANCIAL_INSTITUTION } from "ofx-data-extractor/dist/@types/ofx";
+import { OfxStructure } from "ofx-data-extractor/dist/@types/ofx";
 import { FileDto } from "../dto/file.dto";
+
+// Definindo os tipos que faltam
+interface STRTTRN {
+  TRNTYPE: string;
+  DTPOSTED: string | { date: string };
+  TRNAMT: string;
+  FITID: string | { transactionCode: string };
+  MEMO?: string;
+  CHECKNUM?: string;
+}
+
+interface Bank {
+  STMTTRNRS?: {
+    STMTRS?: {
+      BANKTRANLIST?: {
+        STRTTRN?: STRTTRN[];
+      };
+      BANKACCTFROM?: {
+        ACCTID: string;
+        ACCTT?: string;
+      };
+      LEDGERBAL?: {
+        BALAMT: string;
+        DTASOF: string | { date: string };
+      };
+      CURDEF?: string;
+    };
+  };
+}
+
+interface CreditCard {
+  CCSTMTTRNRS?: {
+    CCSTMTRS?: {
+      BANKTRANLIST?: {
+        STRTTRN?: STRTTRN[];
+      };
+      CCACCTFROM?: {
+        ACCTID: string;
+      };
+      LEDGERBAL?: {
+        BALAMT: string;
+        DTASOF: string | { date: string };
+      };
+      CURDEF?: string;
+    };
+  };
+}
 
 export class OfxStrategy implements FileProcessingStrategy {
   parse(file: Express.Multer.File): FileDto[] {
@@ -156,7 +203,7 @@ export class OfxStrategy implements FileProcessingStrategy {
     return {
       transferType: transfer.TRNTYPE,
       depositedDate: typeof transfer.DTPOSTED == 'string' ? transfer.DTPOSTED : transfer.DTPOSTED.date,
-      description: transfer.MEMO,
+      description: transfer.MEMO || '',
       amount: transfer.TRNAMT,
       fitId: typeof transfer.FITID === 'string' ? transfer.FITID : transfer.FITID.transactionCode,
       category: null,

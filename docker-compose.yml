@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile.dev
-    container_name: track-finan-api
+    container_name: track-finance-api
     volumes:
       - ./:/app
     ports:

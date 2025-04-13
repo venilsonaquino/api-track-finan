@@ -1,5 +1,4 @@
 import { IsDefined, IsNotEmpty, IsString, IsEmail } from 'class-validator';
-
 export class CreateUserDto {
   @IsEmail()
   @IsNotEmpty()

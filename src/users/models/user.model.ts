@@ -1,4 +1,4 @@
-import { Table, Column, Model, DataType, PrimaryKey } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, PrimaryKey, Default } from 'sequelize-typescript';
 import { UserPlan } from 'src/common/enums/user-plan.enum';
 import { ulid } from 'ulid';
 
@@ -49,4 +49,25 @@ export class UserModel extends Model<UserModel> {
     allowNull: true,
   })
   refreshToken: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  avatar: string;
+
+  @Default(false)
+  @Column({
+    field: 'is_email_verified',
+    type: DataType.BOOLEAN,
+  })
+  isEmailVerified: boolean;
+
+
+  @Column({
+    field: 'email_verification_token',
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  emailVerificationToken: string;
 }
