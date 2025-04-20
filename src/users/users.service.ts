@@ -8,7 +8,6 @@ import * as bcrypt from 'bcrypt';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UserCreatedEvent } from './events/user-created.event';
 import { generateShortHash } from 'src/common/utils/generate-short-hash';
-import { MailService } from 'src/shared/mail/mail.service';
 import { LoggerService } from '../config/logging/logger.service';
 
 @Injectable()
@@ -17,7 +16,6 @@ export class UsersService {
     @InjectModel(UserModel)
     private readonly userModel: typeof UserModel,
     private eventEmitter: EventEmitter2,
-    private readonly mailService: MailService,
     @Inject(LoggerService)
     private readonly logger: LoggerService
   ) {}
@@ -49,11 +47,6 @@ export class UsersService {
     this.eventEmitter.emit('user.created', 
       new UserCreatedEvent(newUser.id, newUser.email, newUser.fullName),
     );
-
-    this.mailService.sendUserWelcome(user.email, user.fullName)
-    .catch(error => {
-      this.logger.error('Erro ao enviar e-mail de boas-vindas', error.stack, 'UsersService');
-    });
 
     return newUser;
   }

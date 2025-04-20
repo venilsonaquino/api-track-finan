@@ -60,6 +60,7 @@ export class UserModel extends Model<UserModel> {
   @Column({
     field: 'is_email_verified',
     type: DataType.BOOLEAN,
+    defaultValue: false,
   })
   isEmailVerified: boolean;
 
