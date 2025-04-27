@@ -4,13 +4,15 @@ import * as bcrypt from 'bcrypt';
 import { SignInDto } from './dto/sign-in.dto';
 import { LoginResponseDto } from './dto/login-response.dto';
 import { UsersService } from 'src/users/users.service';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
-    private usersService: UsersService
+    private usersService: UsersService,
   ) {}
+
 
   async signIn(userDTO: SignInDto): Promise<LoginResponseDto> {
 
@@ -68,5 +70,9 @@ export class AuthService {
       },
       expiresIn: 3600
     };
+  }
+
+  async register(createUserDto: CreateUserDto) {
+    return await this.usersService.create(createUserDto);
   }
 }

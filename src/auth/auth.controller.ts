@@ -5,6 +5,7 @@ import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { AuthGuard } from 'src/common/guards/auth/auth.guard';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { PayloadResponse } from './dto/login-response.dto';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -14,6 +15,12 @@ export class AuthController {
   @Post('login')
   async signIn(@Body() signInDto: SignInDto) {
     return await this.authService.signIn(signInDto);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('register')
+  async register(@Body() createUserDto: CreateUserDto) {
+    return await this.authService.register(createUserDto);
   }
 
   @UseGuards(AuthGuard)
