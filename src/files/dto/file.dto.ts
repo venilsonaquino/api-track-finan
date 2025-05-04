@@ -9,11 +9,12 @@ export class FileDto {
     transactionCode: string;
   };
   category: string | null;
-  // Recorrência
+
+  // Fixo
   isRecurring: boolean | null;
   recurrenceType: "INDEFINITE" | "FIXED" | null;
 	recurringInterval: "DAILY" | "MONTHLY" | "WEEKLY" | "YEARLY" | null;
-	recurringEndDate: string | null;
+  
   // Parcelamento
   isInstallment: boolean | null;
 	installmentTotal: number | null;

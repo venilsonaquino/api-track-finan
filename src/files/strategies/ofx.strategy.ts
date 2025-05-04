@@ -210,7 +210,6 @@ export class OfxStrategy implements FileProcessingStrategy {
       isRecurring: null,
       recurrenceType: null,
       recurringInterval: null,
-      recurringEndDate: null,
       isInstallment: null,
       installmentTotal: null,
       installmentNumber: null,
