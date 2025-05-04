@@ -9,8 +9,17 @@ export class FileDto {
     transactionCode: string;
   };
   category: string | null;
+  // Recorrência
   isRecurring: boolean | null;
-  recurringMonths: number | null;
+  recurrenceType: "INDEFINITE" | "FIXED" | null;
+	recurringInterval: "DAILY" | "MONTHLY" | "WEEKLY" | "YEARLY" | null;
+	recurringEndDate: string | null;
+  // Parcelamento
+  isInstallment: boolean | null;
+	installmentTotal: number | null;
+	installmentNumber: number | null;
+	installmentEndDate: string | null;
+
   wallet: string | null;
   isFitIdAlreadyExists?: boolean;
   bankName?: string;
