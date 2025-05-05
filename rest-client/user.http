@@ -3,19 +3,19 @@ POST http://localhost:8080/users
 Content-Type: application/json
 
 {
-  "email": "admin8@trackfinance.com",
-  "password": "admin",
-  "fullName": "Admin"
+  "email": "teste@teste.com",
+  "password": "123",
+  "fullName": "Teste User"
 }
 
 ### Teste de Rota: Obter Todos os Usuários
-GET http://localhost:3000/users
+GET http://localhost:8080/users
 
 ### Teste de Rota: Obter Usuário por ID
-GET http://localhost:3000/users/01J986Z9GKYPVN1JJ0TTJ8DDTS
+GET http://localhost:8080/users/01J986Z9GKYPVN1JJ0TTJ8DDTS
 
 ### Teste de Rota: Atualizar Usuário
-PUT http://localhost:3000/users/01J986Z9GKYPVN1JJ0TTJ8DDTS
+PUT http://localhost:8080/users/01J986Z9GKYPVN1JJ0TTJ8DDTS
 Content-Type: application/json
 
 {
@@ -24,4 +24,4 @@ Content-Type: application/json
 }
 
 ### Teste de Rota: Remover Usuário
-DELETE http://localhost:3000/users/01J986Z9GKYPVN1JJ0TTJ8DDTS
+DELETE http://localhost:8080/users/01J986Z9GKYPVN1JJ0TTJ8DDTS

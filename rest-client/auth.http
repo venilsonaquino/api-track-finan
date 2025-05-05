@@ -1,18 +1,18 @@
 ### Teste de Rota: Login
-POST http://localhost:3000/auth/login
+POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
-  "email": "john.doe@example.com",
-  "password": "securePassword123"
+  "email": "teste@teste.com",
+  "password": "123"
 }
 
 ### Teste de Rota: Obter Perfil do Usuário
-GET http://localhost:3000/auth/profile
+GET http://localhost:8080/auth/profile
 Authorization: Bearer {token}
 
 ### Teste de Rota: Refresh Token
-POST http://localhost:3000/auth/refresh
+POST http://localhost:8080/auth/refresh
 Content-Type: application/json
 
 {
