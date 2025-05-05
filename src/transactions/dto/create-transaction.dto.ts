@@ -1,15 +1,12 @@
-import { IsDefined, IsNotEmpty, IsString, IsDateString, IsEmpty, IsBoolean, IsNumber, IsOptional } from 'class-validator';
+import { IsDefined, IsNotEmpty, IsString, IsDateString, IsEmpty, IsBoolean, IsNumber, IsOptional, ValidateIf, Validate, IsIn, Min } from 'class-validator';
+import { TransactionTypeConstraint } from '../validators/validate-transaction-type.constraint';
+
 
 export class CreateTransactionDto {
   @IsNotEmpty()
   @IsDefined()
   @IsDateString()
   depositedDate: string;
-
-  @IsNotEmpty()
-  @IsDefined()
-  @IsString()
-  transferType: string;
 
   @IsNotEmpty()
   @IsDefined()
@@ -21,15 +18,25 @@ export class CreateTransactionDto {
   @IsNumber()
   amount: number;
 
-  @IsEmpty()
   @IsOptional()
   @IsBoolean()
   isRecurring: boolean;
 
-  @IsEmpty()
   @IsOptional()
+  @IsBoolean()
+  isInstallment: boolean;
+
+  @ValidateIf(o => o.isInstallment === true)
+  @IsDefined()
   @IsNumber()
-  recurringMonths: number;
+  @Min(1)
+  installmentNumber: number | null;
+
+  @ValidateIf(o => o.isInstallment === true)
+  @IsIn(['DAILY', 'MONTHLY', 'WEEKLY', 'YEARLY'], {
+    message: 'installmentInterval must be one of: DAILY, MONTHLY, WEEKLY, YEARLY',
+  })
+  installmentInterval: 'DAILY' | 'MONTHLY' | 'WEEKLY' | 'YEARLY' | null;
 
   @IsNotEmpty()
   @IsDefined()
@@ -45,4 +52,37 @@ export class CreateTransactionDto {
   @IsOptional()
   @IsString()
   fitId: string;
+
+  @IsOptional()
+  @IsString()
+  @IsOptional()
+  accountId: string;
+
+  @IsOptional()
+  @IsString()
+  accountType: string;
+
+  @IsOptional()
+  @IsString()
+  bankId: string;
+
+  @IsOptional()
+  @IsString()
+  bankName: string;
+
+  @IsOptional()
+  @IsString()
+  currency: string;
+
+
+  @IsOptional()
+  @IsString()
+  transactionDate: string;
+
+  @IsOptional()
+  @IsString()
+  transactionType: string;
+
+  @Validate(TransactionTypeConstraint)
+  transactionTypeCheck: boolean; // para testar o validator
 }

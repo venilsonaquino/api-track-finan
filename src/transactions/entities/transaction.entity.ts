@@ -9,9 +9,19 @@ export class TransactionEntity {
   transferType: string | null;
   categoryId: string;
   walletId: string;
-  isRecurring?: boolean | null;
-  recurringMonths?: number | null;
   fitId?: string | null;
+  isRecurring?: boolean | null;
+  isInstallment?: boolean | null;
+  installmentInterval?: "DAILY" | "MONTHLY" | "WEEKLY" | "YEARLY" | null;
+  installmentNumber?: number | null;
+  installmentEndDate?: string | null;
+  accountId?: string | null;
+  accountType?: string | null;
+  bankId?: string | null;
+  bankName?: string | null;
+  currency?: string | null;
+  transactionDate?: string | null;
+  transactionType?: string | null;
 
   constructor(params: Partial<{
     id: string;
@@ -25,6 +35,18 @@ export class TransactionEntity {
     isRecurring?: boolean | null;
     recurringMonths?: number | null;
     fitId?: string;
+    isInstallment?: boolean | null;
+    installmentInterval?: "DAILY" | "MONTHLY" | "WEEKLY" | "YEARLY" | null;
+    installmentNumber?: number | null;
+    installmentEndDate?: string | null;
+    accountId?: string | null;
+    accountType?: string | null;
+    bankId?: string | null;
+    bankName?: string | null;
+    currency?: string | null;
+    transactionDate?: string | null;
+    transactionType?: string | null;
+
   }>) {
     this.id = params.id || ulid();
     this.depositedDate = params.depositedDate;
@@ -35,8 +57,29 @@ export class TransactionEntity {
     this.categoryId = params.categoryId;
     this.walletId = params.walletId;
     this.isRecurring = params.isRecurring;
-    this.recurringMonths = params.recurringMonths;
     this.fitId = params.fitId;
+
+    this.isInstallment = params.isInstallment ?? false;
+    this.isRecurring = params.isRecurring ?? false;
+
+    this.installmentInterval = params.installmentInterval;
+    this.installmentNumber = params.installmentNumber;
+
+    if (this.isInstallment && this.depositedDate && this.installmentNumber && this.installmentInterval) {
+      this.installmentEndDate = this.calculateInstallmentEndDate();
+    } else {
+      this.installmentEndDate = params.installmentEndDate;
+    }
+
+    this.accountId = params.accountId;
+    this.accountType = params.accountType;
+    this.bankId = params.bankId;
+    this.bankName = params.bankName;
+    this.currency = params.currency;
+    this.transactionDate = params.transactionDate;
+    this.transactionType = params.transactionType;
+
+    this.ensureExclusiveFlags();
   }
 
   public static calculateIncome(transactions: TransactionEntity[]): number {
@@ -53,5 +96,36 @@ export class TransactionEntity {
 
   public static calculateMonthlyBalance(income: number, expense: number): number {
     return income + expense;
+  }
+
+  private calculateInstallmentEndDate(): string {
+    const startDate = new Date(this.depositedDate);
+    
+    switch (this.installmentInterval) {
+      case 'DAILY':
+        startDate.setDate(startDate.getDate() + (this.installmentNumber - 1));
+        break;
+      case 'WEEKLY':
+        startDate.setDate(startDate.getDate() + ((this.installmentNumber - 1) * 7));
+        break;
+      case 'MONTHLY':
+        startDate.setMonth(startDate.getMonth() + (this.installmentNumber - 1));
+        break;
+      case 'YEARLY':
+        startDate.setFullYear(startDate.getFullYear() + (this.installmentNumber - 1));
+        break;
+      default:
+        return this.depositedDate;
+    }
+
+    return startDate.toISOString().split('T')[0];
+  }
+
+  private ensureExclusiveFlags(): void {
+    if (this.isInstallment) {
+      this.isRecurring = false;
+    } else if (this.isRecurring) {
+      this.isInstallment = false;
+    }
   }
 }

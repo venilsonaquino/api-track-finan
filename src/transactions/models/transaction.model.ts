@@ -33,13 +33,6 @@ export class TransactionModel extends Model<TransactionModel> {
   description: string;
 
   @Column({
-    field: 'tranfer_type',
-    type: DataType.STRING,
-    allowNull: false,
-  })
-  transferType: string;
-
-  @Column({
     type: DataType.FLOAT,
     allowNull: false,
   })
@@ -61,11 +54,91 @@ export class TransactionModel extends Model<TransactionModel> {
   isRecurring: boolean;
 
   @Column({
-    field: 'recurring_months',
+    field: 'is_installment',
+    type: DataType.BOOLEAN,
+    allowNull: true,
+  })
+  isInstallment: boolean;
+
+  @Column({
+    field: 'installment_number',
     type: DataType.INTEGER,
     allowNull: true,
   })
-  recurringMonths: number;
+  installmentNumber: number;
+
+  @Column({
+    field: 'installment_interval',
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  installmentInterval: string;
+
+  @Column({
+    field: 'installment_end_date',
+    type: DataType.DATEONLY,
+    allowNull: true,
+  })
+  installmentEndDate: string;
+
+  @Column({
+    field: 'account_id',
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  accountId: string;
+
+  @Column({
+    field: 'account_type',
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  accountType: string;
+
+  @Column({
+    field: 'bank_id',
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  bankId: string;
+
+  @Column({
+    field: 'bank_name',
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  bankName: string;
+
+
+  @Column({
+    field: 'currency',
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  currency: string;
+
+
+  @Column({
+    field: 'transaction_date',
+    type: DataType.DATEONLY,
+    allowNull: true,
+  })
+  transactionDate: string;
+
+
+  @Column({
+    field: 'transaction_type',
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  transactionType: string;
+
+  @Column({
+    field: 'transaction_status',
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  
 
   @ForeignKey(() => UserModel)
   @Column({

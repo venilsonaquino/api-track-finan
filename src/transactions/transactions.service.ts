@@ -17,20 +17,46 @@ export class TransactionsService {
     private readonly walletFacade: WalletFacade
   ) {}
 
+  private mapToEntity(model: TransactionModel): TransactionEntity {
+    return new TransactionEntity({
+      id: model.id,
+      depositedDate: model.depositedDate,
+      description: model.description,
+      amount: model.amount,
+      userId: model.userId,
+      categoryId: model.categoryId,
+      walletId: model.walletId,
+      isRecurring: model.isRecurring,
+      fitId: model.fitId,
+      isInstallment: model.isInstallment,
+      installmentInterval: model.installmentInterval as "DAILY" | "MONTHLY" | "WEEKLY" | "YEARLY",
+      installmentNumber: model.installmentNumber,
+      installmentEndDate: model.installmentEndDate,
+    });
+  }
+
   async create(createTransactionDto: CreateTransactionDto, userId: string) {
     try {
 
       const transaction = new TransactionEntity({
-        transferType: createTransactionDto.transferType,
         depositedDate: createTransactionDto.depositedDate,
         description: createTransactionDto.description,
         amount: +createTransactionDto.amount,
-        isRecurring: createTransactionDto.isRecurring,
-        recurringMonths: createTransactionDto.recurringMonths,
         userId: userId,
         categoryId: createTransactionDto.categoryId,
         fitId: createTransactionDto.fitId,
-        walletId: createTransactionDto.walletId
+        walletId: createTransactionDto.walletId,
+        isRecurring: createTransactionDto.isRecurring,
+        isInstallment: createTransactionDto.isInstallment,
+        installmentNumber: createTransactionDto.installmentNumber,
+        installmentInterval: createTransactionDto.installmentInterval,
+        accountId: createTransactionDto.accountId,
+        accountType: createTransactionDto.accountType,
+        bankId: createTransactionDto.bankId,
+        bankName: createTransactionDto.bankName,
+        currency: createTransactionDto.currency,
+        transactionDate: createTransactionDto.transactionDate,
+        transactionType: createTransactionDto.transactionType,
       });
 
       return await this.transactionalModel.create(transaction);
@@ -47,16 +73,24 @@ export class TransactionsService {
   ) {
     try {
       const transactions = createTransactionDtos.map(dto => new TransactionEntity({
-        transferType: dto.transferType,
         depositedDate: dto.depositedDate,
         description: dto.description,
         amount: +dto.amount,
-        isRecurring: dto.isRecurring,
-        recurringMonths: dto.recurringMonths,
         userId: userId,
         categoryId: dto.categoryId,
         fitId: dto.fitId,
-        walletId: dto.walletId
+        walletId: dto.walletId,
+        isRecurring: dto.isRecurring,
+        isInstallment: dto.isInstallment,
+        installmentNumber: dto.installmentNumber,
+        installmentInterval: dto.installmentInterval,
+        accountId: dto.accountId,
+        accountType: dto.accountType,
+        bankId: dto.bankId,
+        bankName: dto.bankName,
+        currency: dto.currency,
+        transactionDate: dto.transactionDate,
+        transactionType: dto.transactionType,
       }));
   
       return await this.transactionalModel.bulkCreate(transactions);
@@ -102,11 +136,12 @@ export class TransactionsService {
     });
 
     const balance = await this.walletFacade.getWalletBalance(userId);
-    const income = TransactionEntity.calculateIncome(transactions as TransactionEntity[]);
-    const expense = TransactionEntity.calculateExpense(transactions as TransactionEntity[]);
+    const transactionEntities = transactions.map(t => this.mapToEntity(t));
+    const income = TransactionEntity.calculateIncome(transactionEntities);
+    const expense = TransactionEntity.calculateExpense(transactionEntities);
     const monthly_balance = TransactionEntity.calculateMonthlyBalance(income, expense);
 
-    const groupBydepositedDate = groupTransactionsAsArray(transactions);
+    const groupBydepositedDate = groupTransactionsAsArray(transactionEntities);
     return {
       "records": groupBydepositedDate,
       "summary": {
@@ -134,12 +169,10 @@ export class TransactionsService {
   async update(id: string, updateTransactionDto: UpdateTransactionDto, userId: string) {
 
     const transaction = new TransactionEntity({
-      transferType: updateTransactionDto.transferType,
       depositedDate: updateTransactionDto.depositedDate,
       description: updateTransactionDto.description,
       amount: +updateTransactionDto.amount,
       isRecurring: updateTransactionDto.isRecurring,
-      recurringMonths: updateTransactionDto.recurringMonths,
       userId: userId,
       categoryId: updateTransactionDto.categoryId,
       fitId: updateTransactionDto.fitId,
