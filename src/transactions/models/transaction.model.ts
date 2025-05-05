@@ -160,7 +160,7 @@ export class TransactionModel extends Model<TransactionModel> {
   @Column({
     field: 'wallet_id',
     type: DataType.STRING(26),
-    allowNull: true,
+    allowNull: false,
   })
   walletId: string;
 
