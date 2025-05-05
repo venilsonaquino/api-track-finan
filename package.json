@@ -38,7 +38,7 @@
     "express": "^4.21.0",
     "express-handlebars": "^8.0.1",
     "mailtrap": "^4.0.0",
-    "nest-winston": "1.7.0",
+    "nest-winston": "1.10.2",
     "nodemailer": "^6.10.0",
     "nodemailer-express-handlebars": "^6.1.2",
     "ofx-data-extractor": "^1.4.0",
