@@ -215,7 +215,7 @@ export class TransactionsService {
         userId: userId
       },
       attributes: ['description', 'created_at'],
-      include: ['category'],
+      include: ['category', 'wallet'],
       order: [['created_at', 'DESC']],
     });
 

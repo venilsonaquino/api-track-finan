@@ -27,13 +27,16 @@ export class FilesService {
     ));
 
     const previousTransactions = await this.transactionsService.previousTransactions(onlyDescriptionsOfTransaction, userId);
-    
     const existingFitIds = await this.transactionsService.previousFitIds(onlyFitIdOfTransaction, userId);
     const descriptionCategoryMap = new Map<string, any>();
+    const descriptionWalletMap = new Map<string, any>();
     
     previousTransactions.forEach(transaction => {
       if (!descriptionCategoryMap.has(transaction.description)) {
         descriptionCategoryMap.set(transaction.description, transaction.category);
+      }
+      if (!descriptionWalletMap.has(transaction.description)) {
+        descriptionWalletMap.set(transaction.description, transaction.wallet);
       }
     });
 
@@ -44,6 +47,7 @@ export class FilesService {
       return {
         ...transfer,
         category: descriptionCategoryMap.get(transfer.description) || null,
+        wallet: descriptionWalletMap.get(transfer.description) || null,
         isFitIdAlreadyExists: existingFitIds.includes(fitIdToCheck)
       }
     })
