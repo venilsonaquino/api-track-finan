@@ -41,7 +41,9 @@ export class FilesController {
     @CurrentUser() user: PayloadResponse
   ): Promise<FileDto[]> {
     const userId = user.id
-    const transaction = await this.filesService.uploadFile(file, userId);
-    return transaction
+
+    const transactions = this.filesService.extractTransactionsFromFile(file);
+    const processedTransactions = await this.filesService.processTransactions(transactions, userId);
+    return processedTransactions
   }
 }

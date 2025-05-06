@@ -8,50 +8,38 @@ import { TransactionsService } from 'src/transactions/transactions.service';
 export class FilesService {
   constructor(private readonly transactionsService: TransactionsService) {}
 
-  async uploadFile(file: Express.Multer.File, userId: string): Promise<FileDto[]> {
-
-    const fileEntity = new FileEntity({
-      fileName: file.originalname
-    });
+  extractTransactionsFromFile(file: Express.Multer.File): FileDto[] {
+    const fileEntity = new FileEntity({ fileName: file.originalname });
     const fileType = fileEntity.getFileType();
-
     const processingStrategy = FilesFactory.getStrategy(fileType);
-    let bankTransfer = processingStrategy.parse(file);
+    return processingStrategy.parse(file);
+  }
 
-    const onlyDescriptionsOfTransaction = Array.from(new Set(bankTransfer.map((transfer: FileDto) => transfer.description)));
-
-    const onlyFitIdOfTransaction = Array.from(new Set(
-      bankTransfer.map((transfer: FileDto) => 
-        typeof transfer.fitId === 'string' ? transfer.fitId : transfer.fitId?.transactionCode
-      )
-    ));
-
-    const previousTransactions = await this.transactionsService.previousTransactions(onlyDescriptionsOfTransaction, userId);
-    const existingFitIds = await this.transactionsService.previousFitIds(onlyFitIdOfTransaction, userId);
-    const descriptionCategoryMap = new Map<string, any>();
-    const descriptionWalletMap = new Map<string, any>();
-    
-    previousTransactions.forEach(transaction => {
-      if (!descriptionCategoryMap.has(transaction.description)) {
-        descriptionCategoryMap.set(transaction.description, transaction.category);
-      }
-      if (!descriptionWalletMap.has(transaction.description)) {
-        descriptionWalletMap.set(transaction.description, transaction.wallet);
-      }
+  async processTransactions(transactions: FileDto[], userId: string): Promise<FileDto[]> {
+    const uniqueDescriptions = [...new Set(transactions.map(t => t.description))];
+    const uniqueFitIds = [...new Set(
+      transactions.map(t => typeof t.fitId === 'string' ? t.fitId : t.fitId?.transactionCode)
+    )];
+  
+    const pastTransactions = await this.transactionsService.previousTransactions(uniqueDescriptions, userId);
+    const existingFitIds = await this.transactionsService.previousFitIds(uniqueFitIds, userId);
+  
+    const categoryMap = new Map<string, any>();
+    const walletMap = new Map<string, any>();
+  
+    pastTransactions.forEach(t => {
+      if (!categoryMap.has(t.description)) categoryMap.set(t.description, t.category);
+      if (!walletMap.has(t.description)) walletMap.set(t.description, t.wallet);
     });
-
-    bankTransfer = bankTransfer.map((transfer: FileDto) => {
-
-      const fitIdToCheck = typeof transfer.fitId === 'string' ? transfer.fitId : transfer.fitId?.transactionCode;
-
+  
+    return transactions.map(t => {
+      const fitId = typeof t.fitId === 'string' ? t.fitId : t.fitId?.transactionCode;
       return {
-        ...transfer,
-        category: descriptionCategoryMap.get(transfer.description) || null,
-        wallet: descriptionWalletMap.get(transfer.description) || null,
-        isFitIdAlreadyExists: existingFitIds.includes(fitIdToCheck)
-      }
-    })
-
-    return bankTransfer
+        ...t,
+        category: categoryMap.get(t.description) || null,
+        wallet: walletMap.get(t.description) || null,
+        isFitIdAlreadyExists: existingFitIds.includes(fitId)
+      };
+    });
   }
 }
