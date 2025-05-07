@@ -1,3 +1,5 @@
+import { CategoryEntity } from "src/categories/entities/category.entity";
+import { WalletEntity } from "src/wallets/entities/wallet.entity";
 export class FileDto {
   transferType: string;
   depositedDate: string;
@@ -8,7 +10,7 @@ export class FileDto {
     protocol: string;
     transactionCode: string;
   };
-  category: string | null;
+  category: string | CategoryEntity | null;
 
   // Fixo
   isRecurring: boolean | null;
@@ -21,7 +23,7 @@ export class FileDto {
 	installmentNumber: number | null;
 	installmentEndDate: string | null;
 
-  wallet: string | null;
+  wallet: string | WalletEntity | null;
   isFitIdAlreadyExists?: boolean;
   bankName?: string;
   bankId?: string;

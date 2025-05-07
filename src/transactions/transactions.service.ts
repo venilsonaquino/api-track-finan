@@ -245,7 +245,8 @@ export class TransactionsService {
         where: {
           fitId: fitIds,
           userId: userId
-        }
+        },
+        include: ['category', 'wallet']
       });
 
       const transactions = transactionsModel.map(t => this.mapToEntity(t));

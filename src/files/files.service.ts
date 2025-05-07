@@ -43,8 +43,8 @@ export class FilesService {
       const existingTransaction = transactionExists.find(t => t.fitId === fitId);
       return {
         ...transaction,
-        category: existingTransaction?.categoryId || null,
-        wallet: existingTransaction?.walletId || null,
+        category: existingTransaction.category || null,
+        wallet: existingTransaction.wallet || null,
         isFitIdAlreadyExists
       };
     }
