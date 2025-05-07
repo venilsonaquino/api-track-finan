@@ -38,7 +38,17 @@ export class FilesService {
   ): FileDto {
     const fitId = getFitId(transaction);
     const isFitIdAlreadyExists = transactionExists.some(t => t.fitId === fitId);
-  
+
+    if(isFitIdAlreadyExists) {
+      const existingTransaction = transactionExists.find(t => t.fitId === fitId);
+      return {
+        ...transaction,
+        category: existingTransaction?.categoryId || null,
+        wallet: existingTransaction?.walletId || null,
+        isFitIdAlreadyExists
+      };
+    }
+
     return {
       ...transaction,
       category: categoryMap.get(transaction.description) || null,
