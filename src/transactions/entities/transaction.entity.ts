@@ -1,4 +1,6 @@
 import { ulid } from 'ulid';
+import { CategoryEntity } from 'src/categories/entities/category.entity';
+import { WalletEntity } from 'src/wallets/entities/wallet.entity';
 
 export class TransactionEntity {
   id: string;
@@ -22,6 +24,8 @@ export class TransactionEntity {
   currency?: string | null;
   transactionDate?: string | null;
   transactionType?: string | null;
+  category?: CategoryEntity;
+  wallet?: WalletEntity;
 
   constructor(params: Partial<{
     id: string;
@@ -46,7 +50,8 @@ export class TransactionEntity {
     currency?: string | null;
     transactionDate?: string | null;
     transactionType?: string | null;
-
+    category?: CategoryEntity;
+    wallet?: WalletEntity;
   }>) {
     this.id = params.id || ulid();
     this.depositedDate = params.depositedDate;
@@ -78,6 +83,9 @@ export class TransactionEntity {
     this.currency = params.currency;
     this.transactionDate = params.transactionDate;
     this.transactionType = params.transactionType;
+
+    this.category = params.category;
+    this.wallet = params.wallet;
 
     this.ensureExclusiveFlags();
   }
