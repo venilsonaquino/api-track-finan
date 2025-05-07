@@ -18,7 +18,7 @@ export class TransactionsService {
   ) {}
 
   private mapToEntity(model: TransactionModel): TransactionEntity {
-    return new TransactionEntity({
+    const entity = new TransactionEntity({
       id: model.id,
       depositedDate: model.depositedDate,
       description: model.description,
@@ -32,7 +32,24 @@ export class TransactionsService {
       installmentInterval: model.installmentInterval as "DAILY" | "MONTHLY" | "WEEKLY" | "YEARLY",
       installmentNumber: model.installmentNumber,
       installmentEndDate: model.installmentEndDate,
+      transactionDate: model.transactionDate,
+      transactionType: model.transactionType,
+      accountId: model.accountId,
+      accountType: model.accountType,
+      bankId: model.bankId,
+      bankName: model.bankName,
+      currency: model.currency,
     });
+
+    if (model.category) {
+      entity.category = model.category;
+    }
+
+    if (model.wallet) {
+      entity.wallet = model.wallet;
+    }
+
+    return entity;
   }
 
   async create(createTransactionDto: CreateTransactionDto, userId: string) {
@@ -206,7 +223,6 @@ export class TransactionsService {
   }
 
   async getTransactionsForSuggestions(uniqueDescriptions: string[], userId: string) {
-
     const transactions = await this.transactionalModel.findAll({
       where: {
         description: {
@@ -214,12 +230,12 @@ export class TransactionsService {
         },
         userId: userId
       },
-      attributes: ['description', 'created_at'],
       include: ['category', 'wallet'],
       order: [['created_at', 'DESC']],
     });
 
-    return transactions;
+    const transactionEntities = transactions.map(transaction => this.mapToEntity(transaction));
+    return transactionEntities;
   }
   
   async getByFitIds(fitIds: string[], userId: string): Promise<TransactionEntity[]> {
