@@ -205,9 +205,9 @@ export class TransactionsService {
     return;
   }
 
-  async previousTransactions(uniqueDescriptions: string[], userId: string) {
+  async getTransactionsForSuggestions(uniqueDescriptions: string[], userId: string) {
 
-    const previousTransactions = await this.transactionalModel.findAll({
+    const transactions = await this.transactionalModel.findAll({
       where: {
         description: {
           [Op.in]: uniqueDescriptions
@@ -219,23 +219,24 @@ export class TransactionsService {
       order: [['created_at', 'DESC']],
     });
 
-    return previousTransactions;
+    return transactions;
   }
   
-  async previousFitIds(fitIds: string[], userId: string): Promise<string[]> {
+  async getByFitIds(fitIds: string[], userId: string): Promise<TransactionEntity[]> {
     try {
       // Busca por transações que possuem fitId e o userId correspondente
-      const transactions = await this.transactionalModel.findAll({
+      const transactionsModel = await this.transactionalModel.findAll({
         where: {
           fitId: fitIds,
           userId: userId
-        },
-        attributes: ['fitId']
+        }
       });
+
+      const transactions = transactionsModel.map(t => this.mapToEntity(t));
   
-      return transactions.map(transaction => transaction.fitId);
+      return transactions;
     } catch (error) {
-      console.error('Error fetching previous fitIds: ', error);
+      console.error('Error fetching transactions by fitIds: ', error);
       const detailMessage = error?.parent?.detail || error?.message;
       throw new InternalServerErrorException(detailMessage);
 
