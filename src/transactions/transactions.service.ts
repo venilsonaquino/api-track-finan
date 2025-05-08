@@ -14,7 +14,7 @@ export class TransactionsService {
   constructor(
     @InjectModel(TransactionModel)
     private readonly transactionalModel: typeof TransactionModel,
-    private readonly walletFacade: WalletFacade
+    private readonly walletFacade: WalletFacade,
   ) {}
 
   private mapToEntity(model: TransactionModel): TransactionEntity {
@@ -54,7 +54,6 @@ export class TransactionsService {
 
   async create(createTransactionDto: CreateTransactionDto, userId: string) {
     try {
-
       const transaction = new TransactionEntity({
         depositedDate: createTransactionDto.depositedDate,
         description: createTransactionDto.description,
@@ -75,6 +74,13 @@ export class TransactionsService {
         transactionDate: createTransactionDto.transactionDate,
         transactionType: createTransactionDto.transactionType,
       });
+
+      // Atualiza o saldo da carteira usando o facade
+      await this.walletFacade.updateWalletBalance(
+        createTransactionDto.walletId,
+        +createTransactionDto.amount,
+        userId
+      );
 
       return await this.transactionalModel.create(transaction);
     } catch (error) {
