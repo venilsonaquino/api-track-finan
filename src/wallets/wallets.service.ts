@@ -74,4 +74,24 @@ export class WalletsService {
     const totalBalance = await this.walletModel.sum('balance', { where: { userId } });
     return totalBalance || 0;
   }
+
+  async updateBalance(walletId: string, amount: number, userId: string): Promise<WalletEntity> {
+    const wallet = await this.findOne(walletId, userId);
+    
+    const newBalance = wallet.balance + amount;
+    
+    const [affectedCount, updated] = await this.walletModel.update(
+      { balance: newBalance },
+      {
+        where: { id: walletId, userId },
+        returning: true
+      }
+    );
+
+    if (affectedCount === 0) {
+      throw new InternalServerErrorException('Failed to update wallet balance');
+    }
+
+    return updated[0];
+  }
 }

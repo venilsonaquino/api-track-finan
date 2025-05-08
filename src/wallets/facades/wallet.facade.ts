@@ -23,4 +23,8 @@ export class WalletFacade {
 
     return this.walletsService.create(walletDto, userId);
   }
+
+  async updateWalletBalance(walletId: string, amount: number, userId: string): Promise<WalletEntity> {
+    return this.walletsService.updateBalance(walletId, amount, userId);
+  }
 }
