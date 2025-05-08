@@ -18,7 +18,7 @@ export class TransactionsService {
   ) {}
 
   private mapToEntity(model: TransactionModel): TransactionEntity {
-    return new TransactionEntity({
+    const entity = new TransactionEntity({
       id: model.id,
       depositedDate: model.depositedDate,
       description: model.description,
@@ -32,7 +32,24 @@ export class TransactionsService {
       installmentInterval: model.installmentInterval as "DAILY" | "MONTHLY" | "WEEKLY" | "YEARLY",
       installmentNumber: model.installmentNumber,
       installmentEndDate: model.installmentEndDate,
+      transactionDate: model.transactionDate,
+      transactionType: model.transactionType,
+      accountId: model.accountId,
+      accountType: model.accountType,
+      bankId: model.bankId,
+      bankName: model.bankName,
+      currency: model.currency,
     });
+
+    if (model.category) {
+      entity.category = model.category;
+    }
+
+    if (model.wallet) {
+      entity.wallet = model.wallet;
+    }
+
+    return entity;
   }
 
   async create(createTransactionDto: CreateTransactionDto, userId: string) {
@@ -205,37 +222,38 @@ export class TransactionsService {
     return;
   }
 
-  async previousTransactions(uniqueDescriptions: string[], userId: string) {
-
-    const previousTransactions = await this.transactionalModel.findAll({
+  async getTransactionsForSuggestions(uniqueDescriptions: string[], userId: string) {
+    const transactions = await this.transactionalModel.findAll({
       where: {
         description: {
           [Op.in]: uniqueDescriptions
         },
         userId: userId
       },
-      attributes: ['description', 'created_at'],
       include: ['category', 'wallet'],
       order: [['created_at', 'DESC']],
     });
 
-    return previousTransactions;
+    const transactionEntities = transactions.map(transaction => this.mapToEntity(transaction));
+    return transactionEntities;
   }
   
-  async previousFitIds(fitIds: string[], userId: string): Promise<string[]> {
+  async getByFitIds(fitIds: string[], userId: string): Promise<TransactionEntity[]> {
     try {
       // Busca por transações que possuem fitId e o userId correspondente
-      const transactions = await this.transactionalModel.findAll({
+      const transactionsModel = await this.transactionalModel.findAll({
         where: {
           fitId: fitIds,
           userId: userId
         },
-        attributes: ['fitId']
+        include: ['category', 'wallet']
       });
+
+      const transactions = transactionsModel.map(t => this.mapToEntity(t));
   
-      return transactions.map(transaction => transaction.fitId);
+      return transactions;
     } catch (error) {
-      console.error('Error fetching previous fitIds: ', error);
+      console.error('Error fetching transactions by fitIds: ', error);
       const detailMessage = error?.parent?.detail || error?.message;
       throw new InternalServerErrorException(detailMessage);
 
