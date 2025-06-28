@@ -4,6 +4,7 @@ import { CreateWalletDto } from './dto/create-wallet.dto';
 import { UpdateWalletDto } from './dto/update-wallet.dto';
 import { WalletModel } from './models/wallet.model';
 import { WalletEntity } from './entities/wallet.entity';
+import MoneyHelper from './helpers/money.helper';
 
 @Injectable()
 export class WalletsService {
@@ -19,12 +20,13 @@ export class WalletsService {
         name: createWalletDto.name,
         description: createWalletDto.description,
         walletType: createWalletDto.walletType,
-        icon: createWalletDto.icon,
-        color: createWalletDto.color,
-        balance: createWalletDto.balance,
+        balance: MoneyHelper.toCents(createWalletDto.balance),
         userId: userId,
+        bankId: createWalletDto.bankId || null
       });
+
       return await this.walletModel.create(walletEntity);
+      
     } catch (error) {
       console.error('Error creating wallet:', error);
       throw new InternalServerErrorException('Failed to create wallet');
