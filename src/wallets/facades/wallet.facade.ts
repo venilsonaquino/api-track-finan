@@ -17,9 +17,8 @@ export class WalletFacade {
     walletDto.name = 'MainWallet';
     walletDto.description = 'Main Wallet';
     walletDto.walletType = 'Personal';
-    walletDto.icon = '';
-    walletDto.color = '#FF5733';
     walletDto.balance = 0;
+    walletDto.bankId = null;
 
     return this.walletsService.create(walletDto, userId);
   }

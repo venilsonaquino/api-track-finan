@@ -14,12 +14,8 @@ export class CreateWalletDto {
   walletType?: string;
 
   @IsString()
-  @IsNotEmpty()
-  icon: string;
-
-  @IsString()
   @IsOptional()
-  color?: string; 
+  bankId?: string;
 
   @IsNumber()
   balance: number;

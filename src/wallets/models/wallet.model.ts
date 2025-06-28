@@ -36,19 +36,12 @@ export class WalletModel extends Model<WalletModel> {
 
   @Column({
     type: DataType.STRING,
-    allowNull: false,
-  })
-  icon: string;
-
-  @Column({
-    type: DataType.STRING,
     allowNull: true,
-    defaultValue: '#000000'
   })
-  color: string;
+  bankId: string | null;
 
   @Column({
-    type: DataType.FLOAT,
+    type: DataType.BIGINT,
     allowNull: false,
     defaultValue: 0
   })
