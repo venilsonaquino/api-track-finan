@@ -1,5 +1,12 @@
-name: ci-nestjs-workflow
-on: [push]
+name: ci-track-finance-api-workflow
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
 
 jobs:
   build-and-test:
