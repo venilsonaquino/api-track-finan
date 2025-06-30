@@ -1,4 +1,3 @@
 describe('TransactionsService', () => {
-  it('should be defined', () => {
-  });
+  it('should be defined', () => {});
 });

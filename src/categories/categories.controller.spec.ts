@@ -1,4 +1,3 @@
 describe('CategoriesController', () => {
-  it('should be defined', () => {
-  });
+  it('should be defined', () => {});
 });

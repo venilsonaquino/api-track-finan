@@ -44,4 +44,4 @@ export const winstonConfig: WinstonModuleOptions = {
       maxFiles: '14d',
     }),
   ],
-}; 
+};

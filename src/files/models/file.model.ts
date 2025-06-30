@@ -1,17 +1,25 @@
-import { BelongsTo, Column, DataType, ForeignKey, Model, PrimaryKey, Table } from "sequelize-typescript";
-import { UserEntity } from "src/users/entities/user.entity";
-import { UserModel } from "src/users/models/user.model";
-import { ulid } from "ulid";
+import {
+  BelongsTo,
+  Column,
+  DataType,
+  ForeignKey,
+  Model,
+  PrimaryKey,
+  Table,
+} from 'sequelize-typescript';
+import { UserEntity } from 'src/users/entities/user.entity';
+import { UserModel } from 'src/users/models/user.model';
+import { ulid } from 'ulid';
 
 @Table({
-  tableName: 'files'
+  tableName: 'files',
 })
 export class FileModel extends Model<FileModel> {
   @PrimaryKey
   @Column({
-  type: DataType.STRING(26),
-  unique: true,
-  defaultValue: ulid(),
+    type: DataType.STRING(26),
+    unique: true,
+    defaultValue: ulid(),
   })
   id: string;
 

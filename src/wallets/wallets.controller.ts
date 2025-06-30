@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Param, Delete, UseGuards, Put } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  UseGuards,
+  Put,
+} from '@nestjs/common';
 import { WalletsService } from './wallets.service';
 import { UpdateWalletDto } from './dto/update-wallet.dto';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
@@ -21,12 +30,16 @@ export class WalletsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string,  @CurrentUser() user) {
+  findOne(@Param('id') id: string, @CurrentUser() user) {
     return this.walletsService.findOne(id, user.id);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateWalletDto: UpdateWalletDto, @CurrentUser() user) {
+  update(
+    @Param('id') id: string,
+    @Body() updateWalletDto: UpdateWalletDto,
+    @CurrentUser() user,
+  ) {
     return this.walletsService.update(id, updateWalletDto, user.id);
   }
 

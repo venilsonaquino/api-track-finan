@@ -1,15 +1,22 @@
-import { Table, Column, Model, DataType, PrimaryKey, Default } from 'sequelize-typescript';
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  PrimaryKey,
+  Default,
+} from 'sequelize-typescript';
 import { UserPlan } from 'src/common/enums/user-plan.enum';
 import { ulid } from 'ulid';
 
 @Table({
-  tableName: 'users'
+  tableName: 'users',
 })
 export class UserModel extends Model<UserModel> {
-@PrimaryKey
-@Column({
-  type: 'VARCHAR(26)',
-  defaultValue: ulid(),
+  @PrimaryKey
+  @Column({
+    type: 'VARCHAR(26)',
+    defaultValue: ulid(),
   })
   id: string;
 
@@ -19,7 +26,7 @@ export class UserModel extends Model<UserModel> {
     unique: true,
     validate: {
       isEmail: true,
-    }
+    },
   })
   email: string;
 
@@ -63,7 +70,6 @@ export class UserModel extends Model<UserModel> {
     defaultValue: false,
   })
   isEmailVerified: boolean;
-
 
   @Column({
     field: 'email_verification_token',

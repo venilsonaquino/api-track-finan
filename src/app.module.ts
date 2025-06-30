@@ -15,7 +15,7 @@ import { LoggerModule } from './config/logging/logger.module';
     LoggerModule,
     EventEmitterModule.forRoot(),
     ConfigModule.forRoot({
-      isGlobal: true
+      isGlobal: true,
     }),
     SequelizeModule.forRoot({
       dialect: process.env.DB_DIALECT as any,

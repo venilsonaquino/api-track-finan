@@ -59,4 +59,4 @@ export class LoggerService implements NestLoggerService {
     console.log(formattedMessage);
     this.writeToFile(this.combinedLogFile, formattedMessage);
   }
-} 
+}

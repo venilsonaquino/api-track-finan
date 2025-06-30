@@ -1,5 +1,5 @@
-import { UnsupportedMediaTypeException } from "@nestjs/common";
-import { ulid } from "ulid";
+import { UnsupportedMediaTypeException } from '@nestjs/common';
+import { ulid } from 'ulid';
 
 export class FileEntity {
   id: string;
@@ -9,13 +9,15 @@ export class FileEntity {
   extension: string;
   private VALID_EXTENSIONS = ['.ofx', '.pdf'];
 
-  constructor(params: Partial<{
-    id: string;
-    fileName: string;
-    userId: string;
-    uploadDate: string;
-    extension: string;
-  }>) {
+  constructor(
+    params: Partial<{
+      id: string;
+      fileName: string;
+      userId: string;
+      uploadDate: string;
+      extension: string;
+    }>,
+  ) {
     this.id = params.id || ulid();
     this.fileName = params.fileName;
     this.userId = params.userId;
@@ -28,7 +30,9 @@ export class FileEntity {
     const extension = fileName.split('.').pop()?.toLowerCase();
 
     if (!this.VALID_EXTENSIONS.includes(`.${extension}`)) {
-      throw new UnsupportedMediaTypeException(`Unsupported file type: .${extension}. Supported types are: ${this.VALID_EXTENSIONS.join(', ')}`);
+      throw new UnsupportedMediaTypeException(
+        `Unsupported file type: .${extension}. Supported types are: ${this.VALID_EXTENSIONS.join(', ')}`,
+      );
     }
   }
 

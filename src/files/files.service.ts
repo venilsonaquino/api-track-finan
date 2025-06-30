@@ -16,17 +16,35 @@ export class FilesService {
     return processingStrategy.parse(file);
   }
 
-  async processTransactions(transactions: FileDto[], userId: string): Promise<FileDto[]> {
+  async processTransactions(
+    transactions: FileDto[],
+    userId: string,
+  ): Promise<FileDto[]> {
     const uniqueDescriptions = getUniqueDescriptions(transactions);
     const uniqueFitIds = getUniqueFitIds(transactions);
-  
-    const transactionsByDescriptions = await this.transactionsService.getTransactionsForSuggestions(uniqueDescriptions, userId);
-    const transactionsByFitIds = await this.transactionsService.getByFitIds(uniqueFitIds, userId);
-  
-    const categoryMap = this.createSuggestionMap(transactionsByDescriptions, 'category');
-    const walletMap = this.createSuggestionMap(transactionsByDescriptions, 'wallet');
-  
-    const enrichedTransactions =  transactions.map(t => this.enrichTransaction(t, categoryMap, walletMap, transactionsByFitIds));
+
+    const transactionsByDescriptions =
+      await this.transactionsService.getTransactionsForSuggestions(
+        uniqueDescriptions,
+        userId,
+      );
+    const transactionsByFitIds = await this.transactionsService.getByFitIds(
+      uniqueFitIds,
+      userId,
+    );
+
+    const categoryMap = this.createSuggestionMap(
+      transactionsByDescriptions,
+      'category',
+    );
+    const walletMap = this.createSuggestionMap(
+      transactionsByDescriptions,
+      'wallet',
+    );
+
+    const enrichedTransactions = transactions.map((t) =>
+      this.enrichTransaction(t, categoryMap, walletMap, transactionsByFitIds),
+    );
     return enrichedTransactions;
   }
 
@@ -34,18 +52,22 @@ export class FilesService {
     transaction: FileDto,
     categoryMap: Map<string, any>,
     walletMap: Map<string, any>,
-    transactionExists: TransactionEntity[]
+    transactionExists: TransactionEntity[],
   ): FileDto {
     const fitId = getFitId(transaction);
-    const isFitIdAlreadyExists = transactionExists.some(t => t.fitId === fitId);
+    const isFitIdAlreadyExists = transactionExists.some(
+      (t) => t.fitId === fitId,
+    );
 
-    if(isFitIdAlreadyExists) {
-      const existingTransaction = transactionExists.find(t => t.fitId === fitId);
+    if (isFitIdAlreadyExists) {
+      const existingTransaction = transactionExists.find(
+        (t) => t.fitId === fitId,
+      );
       return {
         ...transaction,
         category: existingTransaction.category || null,
         wallet: existingTransaction.wallet || null,
-        isFitIdAlreadyExists
+        isFitIdAlreadyExists,
       };
     }
 
@@ -53,13 +75,16 @@ export class FilesService {
       ...transaction,
       category: categoryMap.get(transaction.description) || null,
       wallet: walletMap.get(transaction.description) || null,
-      isFitIdAlreadyExists
+      isFitIdAlreadyExists,
     };
   }
 
-  private createSuggestionMap(transactions: any[], field: 'category' | 'wallet'): Map<string, any> {
+  private createSuggestionMap(
+    transactions: any[],
+    field: 'category' | 'wallet',
+  ): Map<string, any> {
     const map = new Map<string, any>();
-    transactions.forEach(t => {
+    transactions.forEach((t) => {
       if (!map.has(t.description)) {
         map.set(t.description, t[field]);
       }
@@ -70,7 +95,7 @@ export class FilesService {
 
 // Funções auxiliares
 function getUniqueDescriptions(transactions: FileDto[]): string[] {
-  return [...new Set(transactions.map(t => t.description))];
+  return [...new Set(transactions.map((t) => t.description))];
 }
 
 function getUniqueFitIds(transactions: FileDto[]): (string | undefined)[] {

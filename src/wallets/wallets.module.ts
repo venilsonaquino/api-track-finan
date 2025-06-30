@@ -9,6 +9,6 @@ import { WalletFacade } from './facades/wallet.facade';
   imports: [SequelizeModule.forFeature([WalletModel])],
   controllers: [WalletsController],
   providers: [WalletsService, WalletFacade],
-  exports: [WalletFacade]
+  exports: [WalletFacade],
 })
 export class WalletsModule {}

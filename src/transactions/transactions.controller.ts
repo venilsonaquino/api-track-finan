@@ -1,4 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, UseGuards, Request, Query, Put } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  HttpCode,
+  HttpStatus,
+  UseGuards,
+  Request,
+  Query,
+  Put,
+} from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
@@ -13,23 +26,31 @@ export class TransactionsController {
   constructor(private readonly transactionsService: TransactionsService) {}
 
   @Post()
-  async create(@Body() createTransactionDto: CreateTransactionDto, @Request() req) {
+  async create(
+    @Body() createTransactionDto: CreateTransactionDto,
+    @Request() req,
+  ) {
     const { user } = req;
     return await this.transactionsService.create(createTransactionDto, user.id);
   }
 
   @Post('create-batch')
-  async createMany(@Body() createTransactionDto: CreateTransactionDto[], @Request() req) {
+  async createMany(
+    @Body() createTransactionDto: CreateTransactionDto[],
+    @Request() req,
+  ) {
     const { user } = req;
-    return await this.transactionsService.createMany(createTransactionDto, user.id);
+    return await this.transactionsService.createMany(
+      createTransactionDto,
+      user.id,
+    );
   }
 
   @Get()
   async findAll(
-    @CurrentUser() user: PayloadResponse, 
-    @Query() query: DateRangeDto
+    @CurrentUser() user: PayloadResponse,
+    @Query() query: DateRangeDto,
   ) {
-    
     const { id } = user;
     return await this.transactionsService.findAllAndDateRange(id, query);
   }
@@ -42,17 +63,21 @@ export class TransactionsController {
 
   @Put(':id')
   async update(
-    @Param('id') id: string, 
+    @Param('id') id: string,
     @Body() updateTransactionDto: UpdateTransactionDto,
-    @Request() req
+    @Request() req,
   ) {
     const { user } = req;
-    return await this.transactionsService.update(id, updateTransactionDto, user.id);
+    return await this.transactionsService.update(
+      id,
+      updateTransactionDto,
+      user.id,
+    );
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  async remove(@Param('id') id: string,  @Request() req) {
+  async remove(@Param('id') id: string, @Request() req) {
     const { user } = req;
     return await this.transactionsService.remove(id, user.id);
   }

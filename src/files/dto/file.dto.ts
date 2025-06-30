@@ -1,27 +1,29 @@
-import { CategoryEntity } from "src/categories/entities/category.entity";
-import { WalletEntity } from "src/wallets/entities/wallet.entity";
+import { CategoryEntity } from 'src/categories/entities/category.entity';
+import { WalletEntity } from 'src/wallets/entities/wallet.entity';
 export class FileDto {
   transferType: string;
   depositedDate: string;
   description: string;
   amount: string;
-  fitId: string | {
-    date: string;
-    protocol: string;
-    transactionCode: string;
-  };
+  fitId:
+    | string
+    | {
+        date: string;
+        protocol: string;
+        transactionCode: string;
+      };
   category: string | CategoryEntity | null;
 
   // Fixo
   isRecurring: boolean | null;
-  recurrenceType: "INDEFINITE" | "FIXED" | null;
-	recurringInterval: "DAILY" | "MONTHLY" | "WEEKLY" | "YEARLY" | null;
-  
+  recurrenceType: 'INDEFINITE' | 'FIXED' | null;
+  recurringInterval: 'DAILY' | 'MONTHLY' | 'WEEKLY' | 'YEARLY' | null;
+
   // Parcelamento
   isInstallment: boolean | null;
-	installmentTotal: number | null;
-	installmentNumber: number | null;
-	installmentEndDate: string | null;
+  installmentTotal: number | null;
+  installmentNumber: number | null;
+  installmentEndDate: string | null;
 
   wallet: string | WalletEntity | null;
   isFitIdAlreadyExists?: boolean;

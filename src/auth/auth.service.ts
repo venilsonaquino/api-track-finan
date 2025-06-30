@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { SignInDto } from './dto/sign-in.dto';
@@ -13,26 +17,26 @@ export class AuthService {
     private usersService: UsersService,
   ) {}
 
-
   async signIn(userDTO: SignInDto): Promise<LoginResponseDto> {
-
     const user = await this.usersService.findEmail(userDTO.email);
-    
+
     if (!user) throw new NotFoundException('User not found');
 
     const passwordMatch = await bcrypt.compare(userDTO.password, user.password);
 
     if (!passwordMatch) throw new UnauthorizedException('Invalid credentials');
 
-    const payload = { 
-      id: user.id, 
+    const payload = {
+      id: user.id,
       email: user.email,
-      fullNname: user.fullName, 
-      plan: user.plan
+      fullNname: user.fullName,
+      plan: user.plan,
     };
 
     const token = await this.jwtService.signAsync(payload, { expiresIn: '1h' });
-    const refreshToken = await this.jwtService.signAsync(payload, { expiresIn: '7d' });
+    const refreshToken = await this.jwtService.signAsync(payload, {
+      expiresIn: '7d',
+    });
 
     this.usersService.updateRefreshToken(user.id, refreshToken);
 
@@ -42,10 +46,10 @@ export class AuthService {
       user: {
         id: user.id,
         email: user.email,
-        fullName: user.fullName, 
+        fullName: user.fullName,
         plan: user.plan,
       },
-      expiresIn: 3600
+      expiresIn: 3600,
     };
   }
 
@@ -56,7 +60,9 @@ export class AuthService {
 
     const payload = { id: user.id, email: user.email };
     const token = await this.jwtService.signAsync(payload, { expiresIn: '1h' });
-    const new_refresh_token = await this.jwtService.signAsync(payload, { expiresIn: '7d' });
+    const new_refresh_token = await this.jwtService.signAsync(payload, {
+      expiresIn: '7d',
+    });
 
     this.usersService.updateRefreshToken(user.id, new_refresh_token);
     return {
@@ -68,7 +74,7 @@ export class AuthService {
         fullName: user.fullName,
         plan: user.plan,
       },
-      expiresIn: 3600
+      expiresIn: 3600,
     };
   }
 

@@ -1,8 +1,10 @@
-import { TransactionEntity } from "src/transactions/entities/transaction.entity";
+import { TransactionEntity } from 'src/transactions/entities/transaction.entity';
 
 export function groupTransactionsByDate(transactions: TransactionEntity[]) {
   return transactions.reduce((group, transaction) => {
-    const isoDate = new Date(transaction.depositedDate).toISOString().split('T')[0];
+    const isoDate = new Date(transaction.depositedDate)
+      .toISOString()
+      .split('T')[0];
 
     if (!group[isoDate]) {
       group[isoDate] = {

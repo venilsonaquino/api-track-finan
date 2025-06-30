@@ -1,10 +1,14 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { TransactionModel } from './models/transaction.model';
 import { TransactionEntity } from './entities/transaction.entity';
-import { Op, ValidationError } from 'sequelize';
+import { Op } from 'sequelize';
 import { DateRangeDto } from './dto/date-range.dto';
 import { groupTransactionsAsArray } from 'src/common/utils/group-transaction-by-date';
 import { WalletFacade } from 'src/wallets/facades/wallet.facade';
@@ -14,7 +18,7 @@ export class TransactionsService {
   constructor(
     @InjectModel(TransactionModel)
     private readonly transactionalModel: typeof TransactionModel,
-    private readonly walletFacade: WalletFacade
+    private readonly walletFacade: WalletFacade,
   ) {}
 
   private mapToEntity(model: TransactionModel): TransactionEntity {
@@ -29,7 +33,11 @@ export class TransactionsService {
       isRecurring: model.isRecurring,
       fitId: model.fitId,
       isInstallment: model.isInstallment,
-      installmentInterval: model.installmentInterval as "DAILY" | "MONTHLY" | "WEEKLY" | "YEARLY",
+      installmentInterval: model.installmentInterval as
+        | 'DAILY'
+        | 'MONTHLY'
+        | 'WEEKLY'
+        | 'YEARLY',
       installmentNumber: model.installmentNumber,
       installmentEndDate: model.installmentEndDate,
       transactionDate: model.transactionDate,
@@ -54,7 +62,6 @@ export class TransactionsService {
 
   async create(createTransactionDto: CreateTransactionDto, userId: string) {
     try {
-
       const transaction = new TransactionEntity({
         depositedDate: createTransactionDto.depositedDate,
         description: createTransactionDto.description,
@@ -85,31 +92,34 @@ export class TransactionsService {
   }
 
   async createMany(
-    createTransactionDtos: CreateTransactionDto[], 
-    userId: string 
+    createTransactionDtos: CreateTransactionDto[],
+    userId: string,
   ) {
     try {
-      const transactions = createTransactionDtos.map(dto => new TransactionEntity({
-        depositedDate: dto.depositedDate,
-        description: dto.description,
-        amount: +dto.amount,
-        userId: userId,
-        categoryId: dto.categoryId,
-        fitId: dto.fitId,
-        walletId: dto.walletId,
-        isRecurring: dto.isRecurring,
-        isInstallment: dto.isInstallment,
-        installmentNumber: dto.installmentNumber,
-        installmentInterval: dto.installmentInterval,
-        accountId: dto.accountId,
-        accountType: dto.accountType,
-        bankId: dto.bankId,
-        bankName: dto.bankName,
-        currency: dto.currency,
-        transactionDate: dto.transactionDate,
-        transactionType: dto.transactionType,
-      }));
-  
+      const transactions = createTransactionDtos.map(
+        (dto) =>
+          new TransactionEntity({
+            depositedDate: dto.depositedDate,
+            description: dto.description,
+            amount: +dto.amount,
+            userId: userId,
+            categoryId: dto.categoryId,
+            fitId: dto.fitId,
+            walletId: dto.walletId,
+            isRecurring: dto.isRecurring,
+            isInstallment: dto.isInstallment,
+            installmentNumber: dto.installmentNumber,
+            installmentInterval: dto.installmentInterval,
+            accountId: dto.accountId,
+            accountType: dto.accountType,
+            bankId: dto.bankId,
+            bankName: dto.bankName,
+            currency: dto.currency,
+            transactionDate: dto.transactionDate,
+            transactionType: dto.transactionType,
+          }),
+      );
+
       return await this.transactionalModel.bulkCreate(transactions);
     } catch (error) {
       console.error('Error creating transaction:', error);
@@ -119,7 +129,6 @@ export class TransactionsService {
   }
 
   async findAllAndDateRange(userId: string, query: DateRangeDto) {
-
     const { start_date, end_date, category_ids, wallet_ids } = query;
 
     const startDate = start_date;
@@ -132,17 +141,17 @@ export class TransactionsService {
       },
     };
 
-    if(category_ids){
+    if (category_ids) {
       const categoryIdsArray = category_ids.split(',');
       whereCondition.categoryId = {
-        [Op.in]: categoryIdsArray
+        [Op.in]: categoryIdsArray,
       };
     }
 
-    if(wallet_ids){
+    if (wallet_ids) {
       const walletIdsArray = wallet_ids.split(',');
       whereCondition.walletId = {
-        [Op.in]: walletIdsArray
+        [Op.in]: walletIdsArray,
       };
     }
 
@@ -153,38 +162,44 @@ export class TransactionsService {
     });
 
     const balance = await this.walletFacade.getWalletBalance(userId);
-    const transactionEntities = transactions.map(t => this.mapToEntity(t));
+    const transactionEntities = transactions.map((t) => this.mapToEntity(t));
     const income = TransactionEntity.calculateIncome(transactionEntities);
     const expense = TransactionEntity.calculateExpense(transactionEntities);
-    const monthly_balance = TransactionEntity.calculateMonthlyBalance(income, expense);
+    const monthly_balance = TransactionEntity.calculateMonthlyBalance(
+      income,
+      expense,
+    );
 
     const groupBydepositedDate = groupTransactionsAsArray(transactionEntities);
     return {
-      "records": groupBydepositedDate,
-      "summary": {
-        "current_balance": balance,
-        "monthly_income": income,
-        "monthly_expense": expense,
-        "monthly_balance": monthly_balance
-      }
-    }
+      records: groupBydepositedDate,
+      summary: {
+        current_balance: balance,
+        monthly_income: income,
+        monthly_expense: expense,
+        monthly_balance: monthly_balance,
+      },
+    };
   }
 
   async findOne(id: string, userId: string) {
     const transaction = await this.transactionalModel.findOne({
-      where: {id, userId},
+      where: { id, userId },
       include: ['user', 'category'],
     });
 
-    if(!transaction){
-      throw new NotFoundException(`Transaction with id ${id} not found`)
+    if (!transaction) {
+      throw new NotFoundException(`Transaction with id ${id} not found`);
     }
 
     return transaction;
   }
 
-  async update(id: string, updateTransactionDto: UpdateTransactionDto, userId: string) {
-
+  async update(
+    id: string,
+    updateTransactionDto: UpdateTransactionDto,
+    userId: string,
+  ) {
     const transaction = new TransactionEntity({
       depositedDate: updateTransactionDto.depositedDate,
       description: updateTransactionDto.description,
@@ -193,27 +208,27 @@ export class TransactionsService {
       userId: userId,
       categoryId: updateTransactionDto.categoryId,
       fitId: updateTransactionDto.fitId,
-      walletId: updateTransactionDto.walletId
+      walletId: updateTransactionDto.walletId,
     });
 
+    const [affectedCount, updated] = await this.transactionalModel.update(
+      transaction,
+      {
+        where: { id, userId },
+        returning: true,
+      },
+    );
 
-    const [affectedCount, updated] = await this.transactionalModel.update(transaction, {
-      where: { id, userId },
-      returning: true
-    });
-
-    if (affectedCount == 0 && updated.length == 0){
+    if (affectedCount == 0 && updated.length == 0) {
       throw new NotFoundException(`Transaction with id ${id} not found`);
     }
 
     return updated[0];
   }
 
-
-  
   async remove(id: string, userId: string) {
     const deletedCount = await this.transactionalModel.destroy({
-      where: { id, userId } 
+      where: { id, userId },
     });
 
     if (deletedCount === 0) {
@@ -222,42 +237,48 @@ export class TransactionsService {
     return;
   }
 
-  async getTransactionsForSuggestions(uniqueDescriptions: string[], userId: string) {
+  async getTransactionsForSuggestions(
+    uniqueDescriptions: string[],
+    userId: string,
+  ) {
     const transactions = await this.transactionalModel.findAll({
       where: {
         description: {
-          [Op.in]: uniqueDescriptions
+          [Op.in]: uniqueDescriptions,
         },
-        userId: userId
+        userId: userId,
       },
       include: ['category', 'wallet'],
       order: [['created_at', 'DESC']],
     });
 
-    const transactionEntities = transactions.map(transaction => this.mapToEntity(transaction));
+    const transactionEntities = transactions.map((transaction) =>
+      this.mapToEntity(transaction),
+    );
     return transactionEntities;
   }
-  
-  async getByFitIds(fitIds: string[], userId: string): Promise<TransactionEntity[]> {
+
+  async getByFitIds(
+    fitIds: string[],
+    userId: string,
+  ): Promise<TransactionEntity[]> {
     try {
       // Busca por transações que possuem fitId e o userId correspondente
       const transactionsModel = await this.transactionalModel.findAll({
         where: {
           fitId: fitIds,
-          userId: userId
+          userId: userId,
         },
-        include: ['category', 'wallet']
+        include: ['category', 'wallet'],
       });
 
-      const transactions = transactionsModel.map(t => this.mapToEntity(t));
-  
+      const transactions = transactionsModel.map((t) => this.mapToEntity(t));
+
       return transactions;
     } catch (error) {
       console.error('Error fetching transactions by fitIds: ', error);
       const detailMessage = error?.parent?.detail || error?.message;
       throw new InternalServerErrorException(detailMessage);
-
     }
   }
-
 }

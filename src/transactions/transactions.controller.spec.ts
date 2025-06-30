@@ -1,4 +1,3 @@
 describe('TransactionsController', () => {
-  it('should be defined', () => {
-  });
+  it('should be defined', () => {});
 });

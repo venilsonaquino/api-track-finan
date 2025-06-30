@@ -12,11 +12,11 @@ import { LoggerModule } from '../config/logging/logger.module';
 
 @Module({
   imports: [
-    SequelizeModule.forFeature([UserModel]), 
-    CategoriesModule, 
+    SequelizeModule.forFeature([UserModel]),
+    CategoriesModule,
     WalletsModule,
     MailModule,
-    LoggerModule
+    LoggerModule,
   ],
   controllers: [UsersController],
   providers: [UsersService, CreateCategoriesListener, CreateWalletListener],

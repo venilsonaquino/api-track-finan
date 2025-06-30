@@ -1,4 +1,12 @@
-import { Table, Column, Model, DataType, PrimaryKey, BeforeCreate, ForeignKey, BelongsTo } from 'sequelize-typescript';
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  PrimaryKey,
+  ForeignKey,
+  BelongsTo,
+} from 'sequelize-typescript';
 import { CategoryEntity } from 'src/categories/entities/category.entity';
 import { CategoryModel } from 'src/categories/models/category.model';
 import { UserEntity } from 'src/users/entities/user.entity';
@@ -11,7 +19,6 @@ import { ulid } from 'ulid';
   tableName: 'transactions',
 })
 export class TransactionModel extends Model<TransactionModel> {
-  
   @PrimaryKey
   @Column({
     type: DataType.STRING(26),
@@ -109,7 +116,6 @@ export class TransactionModel extends Model<TransactionModel> {
   })
   bankName: string;
 
-
   @Column({
     field: 'currency',
     type: DataType.STRING,
@@ -117,14 +123,12 @@ export class TransactionModel extends Model<TransactionModel> {
   })
   currency: string;
 
-
   @Column({
     field: 'transaction_date',
     type: DataType.DATEONLY,
     allowNull: true,
   })
   transactionDate: string;
-
 
   @Column({
     field: 'transaction_type',
@@ -138,8 +142,6 @@ export class TransactionModel extends Model<TransactionModel> {
     type: DataType.STRING,
     allowNull: true,
   })
-  
-
   @ForeignKey(() => UserModel)
   @Column({
     field: 'user_id',
