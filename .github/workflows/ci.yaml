@@ -1,4 +1,4 @@
-name: ci-nestjs-workflow
+name: ci-track-finance-api-workflow
 
 on:
   push:
