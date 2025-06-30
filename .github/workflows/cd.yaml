@@ -77,8 +77,8 @@ jobs:
           context: .
           push: true
           tags: |
-            track-finance-api/app:latest
-            track-finance-api/app:${{ github.sha }}
+            venilson/track-finance-api:latest
+            venilson/track-finance-api:${{ github.sha }}
 
   deploy:
     runs-on: ubuntu-latest
