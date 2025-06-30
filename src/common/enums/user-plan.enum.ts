@@ -1,6 +1,5 @@
 export enum UserPlan {
-    Free = 'free',
-    Basic = 'basic',
-    Premium = 'premium',
-  }
-  
+  Free = 'free',
+  Basic = 'basic',
+  Premium = 'premium',
+}

@@ -1,4 +1,3 @@
 describe('UsersService', () => {
-  it('should be defined', () => {
-  });
+  it('should be defined', () => {});
 });

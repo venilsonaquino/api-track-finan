@@ -9,6 +9,6 @@ export class CreateWalletListener {
 
   @OnEvent('user.created')
   async handleUserCreatedEvent(event: UserCreatedEvent) {
-      await this.walletFacade.createWallet(event.userId);
+    await this.walletFacade.createWallet(event.userId);
   }
 }

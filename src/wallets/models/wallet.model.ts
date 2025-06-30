@@ -1,4 +1,13 @@
-import { Table, Column, Model, DataType, PrimaryKey, ForeignKey, BelongsTo, HasMany } from 'sequelize-typescript';
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  PrimaryKey,
+  ForeignKey,
+  BelongsTo,
+  HasMany,
+} from 'sequelize-typescript';
 import { TransactionEntity } from 'src/transactions/entities/transaction.entity';
 import { TransactionModel } from 'src/transactions/models/transaction.model';
 import { UserEntity } from 'src/users/entities/user.entity';
@@ -6,13 +15,13 @@ import { UserModel } from 'src/users/models/user.model';
 import { ulid } from 'ulid';
 
 @Table({
-  tableName: 'wallets'
+  tableName: 'wallets',
 })
 export class WalletModel extends Model<WalletModel> {
-@PrimaryKey
-@Column({
-  type: 'VARCHAR(26)',
-  defaultValue: ulid(),
+  @PrimaryKey
+  @Column({
+    type: 'VARCHAR(26)',
+    defaultValue: ulid(),
   })
   id: string;
 
@@ -43,17 +52,17 @@ export class WalletModel extends Model<WalletModel> {
   @Column({
     type: DataType.BIGINT,
     allowNull: false,
-    defaultValue: 0
+    defaultValue: 0,
   })
   balance: number;
-  
+
   @ForeignKey(() => UserModel)
   @Column({
     field: 'user_id',
     type: DataType.STRING(26),
     allowNull: false,
   })
-  userId: string
+  userId: string;
 
   @BelongsTo(() => UserModel)
   user: UserEntity;

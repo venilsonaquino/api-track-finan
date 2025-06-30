@@ -1,11 +1,16 @@
-import { table } from "console";
-import { Column, DataType, Model, PrimaryKey, Table } from "sequelize-typescript";
-import { ulid } from "ulid";
+import {
+  Column,
+  DataType,
+  Model,
+  PrimaryKey,
+  Table,
+} from 'sequelize-typescript';
+import { ulid } from 'ulid';
 
 @Table({
-  tableName: 'categories'
+  tableName: 'categories',
 })
-export class CategoryModel extends Model<CategoryModel>{
+export class CategoryModel extends Model<CategoryModel> {
   @PrimaryKey
   @Column({
     type: 'VARCHAR(26)',

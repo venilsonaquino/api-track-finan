@@ -1,4 +1,9 @@
-import { ConflictException, Injectable, NotFoundException, Inject } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+  Inject,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserModel } from './models/user.model';
@@ -17,19 +22,25 @@ export class UsersService {
     private readonly userModel: typeof UserModel,
     private eventEmitter: EventEmitter2,
     @Inject(LoggerService)
-    private readonly logger: LoggerService
+    private readonly logger: LoggerService,
   ) {}
-  
-  async create(createUserDto: CreateUserDto) {
-    this.logger.log(`Tentativa de criação de usuário com email: ${createUserDto.email}`, 'UsersService');
 
-    const {email, password} = createUserDto;
+  async create(createUserDto: CreateUserDto) {
+    this.logger.log(
+      `Tentativa de criação de usuário com email: ${createUserDto.email}`,
+      'UsersService',
+    );
+
+    const { email, password } = createUserDto;
 
     const existingUser = await this.userModel.findOne({ where: { email } });
     if (existingUser) {
-      this.logger.warn(`Tentativa de criar usuário com email já existente: ${email}`, 'UsersService');
+      this.logger.warn(
+        `Tentativa de criar usuário com email já existente: ${email}`,
+        'UsersService',
+      );
       throw new ConflictException('E-mail is already in use.');
-    };
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
     createUserDto.password = hashedPassword;
@@ -40,11 +51,15 @@ export class UsersService {
       password: hashedPassword,
       emailVerificationToken: generateShortHash(),
     });
-  
-    const newUser = await this.userModel.create(user);
-    this.logger.log(`Usuário criado com sucesso. ID: ${newUser.id}`, 'UsersService');
 
-    this.eventEmitter.emit('user.created', 
+    const newUser = await this.userModel.create(user);
+    this.logger.log(
+      `Usuário criado com sucesso. ID: ${newUser.id}`,
+      'UsersService',
+    );
+
+    this.eventEmitter.emit(
+      'user.created',
       new UserCreatedEvent(newUser.id, newUser.email, newUser.fullName),
     );
 
@@ -58,11 +73,11 @@ export class UsersService {
 
   async findOne(id: string) {
     this.logger.log(`Buscando usuário com ID: ${id}`, 'UsersService');
-    const user = await this.userModel.findOne({where: {id}});
+    const user = await this.userModel.findOne({ where: { id } });
 
-    if(!user){
+    if (!user) {
       this.logger.warn(`Usuário não encontrado. ID: ${id}`, 'UsersService');
-      throw new NotFoundException()
+      throw new NotFoundException();
     }
 
     return user;
@@ -70,37 +85,49 @@ export class UsersService {
 
   async findEmail(email: string) {
     this.logger.log(`Buscando usuário por email: ${email}`, 'UsersService');
-    return await this.userModel.findOne({where: {email}});
+    return await this.userModel.findOne({ where: { email } });
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
     this.logger.log(`Atualizando usuário com ID: ${id}`, 'UsersService');
 
-    const {password} = updateUserDto;
+    const { password } = updateUserDto;
 
     const hashedPassword = await bcrypt.hash(password, 10);
     updateUserDto.password = hashedPassword;
 
-    const [affectedCount, updated] = await this.userModel.update(updateUserDto, {
-      where: { id } ,
-      returning: true
-    });
+    const [affectedCount, updated] = await this.userModel.update(
+      updateUserDto,
+      {
+        where: { id },
+        returning: true,
+      },
+    );
 
-    if (affectedCount == 0 && updated.length == 0){
-      this.logger.warn(`Tentativa de atualizar usuário não encontrado. ID: ${id}`, 'UsersService');
+    if (affectedCount == 0 && updated.length == 0) {
+      this.logger.warn(
+        `Tentativa de atualizar usuário não encontrado. ID: ${id}`,
+        'UsersService',
+      );
       throw new NotFoundException(`User with id ${id} not found`);
     }
 
-    this.logger.log(`Usuário atualizado com sucesso. ID: ${id}`, 'UsersService');
+    this.logger.log(
+      `Usuário atualizado com sucesso. ID: ${id}`,
+      'UsersService',
+    );
     return updated[0];
   }
 
   async remove(id: string): Promise<void> {
     this.logger.log(`Removendo usuário com ID: ${id}`, 'UsersService');
     const deletedCount = await this.userModel.destroy({ where: { id } });
-  
+
     if (deletedCount === 0) {
-      this.logger.warn(`Tentativa de remover usuário não encontrado. ID: ${id}`, 'UsersService');
+      this.logger.warn(
+        `Tentativa de remover usuário não encontrado. ID: ${id}`,
+        'UsersService',
+      );
       throw new NotFoundException(`User with id ${id} not found`);
     }
     this.logger.log(`Usuário removido com sucesso. ID: ${id}`, 'UsersService');
@@ -108,11 +135,11 @@ export class UsersService {
   }
 
   async updateRefreshToken(id: string, refreshToken: string) {
-    this.logger.log(`Atualizando refresh token para usuário ID: ${id}`, 'UsersService');
-    await this.userModel.update(
-      { refreshToken },
-      { where: { id } }
+    this.logger.log(
+      `Atualizando refresh token para usuário ID: ${id}`,
+      'UsersService',
     );
+    await this.userModel.update({ refreshToken }, { where: { id } });
   }
 
   async findByRefreshToken(refreshToken: string): Promise<UserEntity | null> {

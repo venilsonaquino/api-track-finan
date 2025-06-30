@@ -9,15 +9,17 @@ export class WalletEntity {
   userId: string;
   bankId: string | null;
 
-  constructor(params: Partial<{
-    id: string;
-    name: string;
-    description: string;
-    walletType: string | null;
-    balance: number;
-    userId: string;
-    bankId: string | null;
-  }>) {
+  constructor(
+    params: Partial<{
+      id: string;
+      name: string;
+      description: string;
+      walletType: string | null;
+      balance: number;
+      userId: string;
+      bankId: string | null;
+    }>,
+  ) {
     this.id = params.id || ulid();
     this.name = params.name;
     this.description = params.description;

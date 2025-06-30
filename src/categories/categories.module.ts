@@ -9,6 +9,6 @@ import { CategoryFacade } from './facades/category.facade';
   imports: [SequelizeModule.forFeature([CategoryModel])],
   controllers: [CategoriesController],
   providers: [CategoriesService, CategoryFacade],
-  exports: [CategoryFacade]
+  exports: [CategoryFacade],
 })
 export class CategoriesModule {}

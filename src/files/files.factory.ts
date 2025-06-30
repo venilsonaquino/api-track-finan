@@ -1,6 +1,6 @@
-import { FileProcessingStrategy } from "./interfaces/file-processing.strategy";
-import { OfxStrategy } from "./strategies/ofx.strategy";
-import { PdfStrategy } from "./strategies/pdf.strategy";
+import { FileProcessingStrategy } from './interfaces/file-processing.strategy';
+import { OfxStrategy } from './strategies/ofx.strategy';
+import { PdfStrategy } from './strategies/pdf.strategy';
 
 export class FilesFactory {
   static getStrategy(fileType: string): FileProcessingStrategy {

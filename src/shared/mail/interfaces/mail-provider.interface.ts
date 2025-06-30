@@ -4,13 +4,13 @@ export interface MailProvider {
     subject: string,
     text: string,
     fromName?: string,
-    fromEmail?: string
+    fromEmail?: string,
   ): Promise<void>;
 
   sendMailWithTemplate(
     to: string,
     subject: string,
     template: string,
-    context: any
+    context: any,
   ): Promise<void>;
 }

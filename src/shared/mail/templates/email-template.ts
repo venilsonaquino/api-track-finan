@@ -58,4 +58,4 @@ export function getEmailTemplate(title: string, content: string): string {
 </body>
 </html>
   `;
-} 
+}

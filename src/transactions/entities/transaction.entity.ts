@@ -14,7 +14,7 @@ export class TransactionEntity {
   fitId?: string | null;
   isRecurring?: boolean | null;
   isInstallment?: boolean | null;
-  installmentInterval?: "DAILY" | "MONTHLY" | "WEEKLY" | "YEARLY" | null;
+  installmentInterval?: 'DAILY' | 'MONTHLY' | 'WEEKLY' | 'YEARLY' | null;
   installmentNumber?: number | null;
   installmentEndDate?: string | null;
   accountId?: string | null;
@@ -27,32 +27,34 @@ export class TransactionEntity {
   category?: CategoryEntity;
   wallet?: WalletEntity;
 
-  constructor(params: Partial<{
-    id: string;
-    depositedDate: string;
-    description: string;
-    amount: number;
-    userId: string;
-    transferType: string | null;
-    categoryId: string | null;
-    walletId: string;
-    isRecurring?: boolean | null;
-    recurringMonths?: number | null;
-    fitId?: string;
-    isInstallment?: boolean | null;
-    installmentInterval?: "DAILY" | "MONTHLY" | "WEEKLY" | "YEARLY" | null;
-    installmentNumber?: number | null;
-    installmentEndDate?: string | null;
-    accountId?: string | null;
-    accountType?: string | null;
-    bankId?: string | null;
-    bankName?: string | null;
-    currency?: string | null;
-    transactionDate?: string | null;
-    transactionType?: string | null;
-    category?: CategoryEntity;
-    wallet?: WalletEntity;
-  }>) {
+  constructor(
+    params: Partial<{
+      id: string;
+      depositedDate: string;
+      description: string;
+      amount: number;
+      userId: string;
+      transferType: string | null;
+      categoryId: string | null;
+      walletId: string;
+      isRecurring?: boolean | null;
+      recurringMonths?: number | null;
+      fitId?: string;
+      isInstallment?: boolean | null;
+      installmentInterval?: 'DAILY' | 'MONTHLY' | 'WEEKLY' | 'YEARLY' | null;
+      installmentNumber?: number | null;
+      installmentEndDate?: string | null;
+      accountId?: string | null;
+      accountType?: string | null;
+      bankId?: string | null;
+      bankName?: string | null;
+      currency?: string | null;
+      transactionDate?: string | null;
+      transactionType?: string | null;
+      category?: CategoryEntity;
+      wallet?: WalletEntity;
+    }>,
+  ) {
     this.id = params.id || ulid();
     this.depositedDate = params.depositedDate;
     this.description = params.description;
@@ -70,7 +72,12 @@ export class TransactionEntity {
     this.installmentInterval = params.installmentInterval;
     this.installmentNumber = params.installmentNumber;
 
-    if (this.isInstallment && this.depositedDate && this.installmentNumber && this.installmentInterval) {
+    if (
+      this.isInstallment &&
+      this.depositedDate &&
+      this.installmentNumber &&
+      this.installmentInterval
+    ) {
       this.installmentEndDate = this.calculateInstallmentEndDate();
     } else {
       this.installmentEndDate = params.installmentEndDate;
@@ -92,35 +99,42 @@ export class TransactionEntity {
 
   public static calculateIncome(transactions: TransactionEntity[]): number {
     return transactions
-      .filter(t => t.amount > 0 && t.transferType === 'CREDIT')
+      .filter((t) => t.amount > 0 && t.transferType === 'CREDIT')
       .reduce((sum, t) => sum + t.amount, 0);
   }
 
   public static calculateExpense(transactions: TransactionEntity[]): number {
     return transactions
-    .filter(t => t.amount < 0)
-    .reduce((sum, t) => sum + t.amount, 0);
+      .filter((t) => t.amount < 0)
+      .reduce((sum, t) => sum + t.amount, 0);
   }
 
-  public static calculateMonthlyBalance(income: number, expense: number): number {
+  public static calculateMonthlyBalance(
+    income: number,
+    expense: number,
+  ): number {
     return income + expense;
   }
 
   private calculateInstallmentEndDate(): string {
     const startDate = new Date(this.depositedDate);
-    
+
     switch (this.installmentInterval) {
       case 'DAILY':
         startDate.setDate(startDate.getDate() + (this.installmentNumber - 1));
         break;
       case 'WEEKLY':
-        startDate.setDate(startDate.getDate() + ((this.installmentNumber - 1) * 7));
+        startDate.setDate(
+          startDate.getDate() + (this.installmentNumber - 1) * 7,
+        );
         break;
       case 'MONTHLY':
         startDate.setMonth(startDate.getMonth() + (this.installmentNumber - 1));
         break;
       case 'YEARLY':
-        startDate.setFullYear(startDate.getFullYear() + (this.installmentNumber - 1));
+        startDate.setFullYear(
+          startDate.getFullYear() + (this.installmentNumber - 1),
+        );
         break;
       default:
         return this.depositedDate;

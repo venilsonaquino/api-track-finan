@@ -12,7 +12,7 @@ export class WalletFacade {
   }
 
   async createWallet(userId: string): Promise<WalletEntity> {
-    let walletDto = new CreateWalletDto();
+    const walletDto = new CreateWalletDto();
 
     walletDto.name = 'MainWallet';
     walletDto.description = 'Main Wallet';
