@@ -100,3 +100,4 @@ jobs:
             docker run -d --name track-finance-api \
               -p 3000:3000 \
               track-finance-api/app:latest
+              
